@@ -1,0 +1,60 @@
+hb = 1.054571817*^-34;(*Quantity["ReducedPlanckConstant"];*)
+eps0=8.8541878188*^-12;(*Quantity["VacuumPermittivity"];*)
+
+
+deff = 1.75*^-12; (*effective second-order nonlinear coefficient of BBO crystal = 1.75 pm/V*)
+lambdap = 405*^-9; (*wavelength of pump = 405nm*)
+L = 3*^-3; (*interacting length of crystal = 3mm*)
+Pp = 10*^-3; (*pump laser power = 3 mW*)
+dlambdas = 1*^-9; (*step size in wavelength = 1 nm*)
+dthetas = 0.5; (*step size in angle = 0.5 mrad*)
+W=Sqrt[60*30]*10^-6; (*pump focal radius = sqrt(60*30) um ?*)
+thetam=29.3*Pi/180; (*crystal phase matching angle = 29.3 deg*)
+
+
+
+omegap = 2*Pi/lambdap;
+Np = Pp/(hb*omegap);
+
+
+
+no[lam_]:=Module[{},
+l =lam *  1*^6; (*convert lambda to um for formula*)
+Sqrt[2.7359 + 0.01878 / (l^2 - 0.01822) - 0.01354 * l^2]
+]
+
+nenoangle[lam_]:=Module[{},
+l = lam * 1*^6;(*convert lambda to um for formula*)
+Sqrt[2.3753 + 0.01224 / (l^2 - 0.01667) - 0.01516 * l^2]
+]
+
+ne[lam_, thetam_]:=1 / Sqrt[Cos[thetam]^2 / no[lam]^2 + Sin[thetam]^2 / nenoangle[lam]^2]
+
+
+
+
+ComputeFlux[lambdas_, thetas_] := Module[{factor, lambdai,integrand},
+lambdai = (lambdas lambdap) / (lambdas - lambdap);
+ns=no[lambdas];
+ni=no[lambdai];
+np=ne[lambdap,thetam];
+factor=2 Pi Sqrt[2] hb deff^2 omegap L^2 Np / (eps0 ns ni np lambdas^5 lambdai) * Sin[2 thetas] * dlambdas * dthetas;
+ks=ns*2 Pi/lambdas;
+ki=ni*2Pi/lambdai;
+kp=np*2Pi/lambdap;
+xis=ks Sin[thetas] W;
+deltakz[xii_]:=ks Cos[thetas]+Sqrt[ki^2-(xii/W)^2]-kp;
+integrand[xii_]:=E^(-1/2 (xis - xii)^2) * Sinc[1/2 L deltakz[xii]];
+
+(*test*)
+(*factor*NIntegrate[integrand[xii],{xii,-ki*W,ki*W}]*)
+Plot[factor*integrand[xii],{xii,-ki*W/10,ki*W/10},PlotRange->{-150000,50000},PlotStyle -> None,
+Mesh -> All,
+MeshStyle -> Black
+]
+]
+
+
+
+
+ComputeFlux[810*^-9,1*Pi/180]
