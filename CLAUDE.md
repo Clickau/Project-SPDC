@@ -20,7 +20,10 @@ below); keep it only for reference.
   the unified flux `Ns(lam_s, theta_s, ...)` (numpy-broadcasts λs against θs,
   so one function serves both the Fig. 6 maps and the detector scans; keyword
   options: `external` angle convention, `Nxi` quadrature points, `lam_i_max`
-  idler cutoff), `tuning_curve`, and `crystal_rotation`. Running
+  idler cutoff, `idler_theta_window` — restricts the ξi quadrature to idlers
+  exiting into a given external polar-angle window, turning `Ns` into the
+  joint signal-AND-idler coincidence kernel; default None is the unchanged
+  singles marginal), `tuning_curve`, and `crystal_rotation`. Running
   `python spdc_physics.py` executes `sanity_check()` against the paper.
   `Ns` also takes per-call overrides of the experiment parameters
   (`lam_p, Pp, L, W, deff`), and `tuning_curve`/`crystal_rotation` of `lam_p`;
@@ -53,6 +56,20 @@ below); keep it only for reference.
   (6.46e3 /s per detector; full ring 2.83e5 /s), and writes
   `detector_scan_mysetup.png` (rate vs crystal rotation α — a broad symmetric
   thin-crystal sinc² pattern, 2 orders down at α ≈ ±3.1°).
+- **`coincidence_counts.py`** — signal–idler coincidences between TWO detectors
+  at ±3° for the user's setup (reuses `detector_counts`' parameters and
+  `ideal_cut_deg`; that script is untouched). Per-arm PARAMETERS (angle,
+  distance, aperture, filter; `filter_fwhm=None` = open arm). Coincidence =
+  the `Ns` integral with (a) `idler_theta_window` = arm B's polar span,
+  (b) λ weight `T_A(λs)·T_B(λi(λs))`, (c) the singles' arc factor dφ_A/2π
+  replaced by the A-arc × mirrored-B-arc overlap smeared by the azimuthal
+  momentum-correlation width σφ = (1/W)/(k0·sinθ) ≈ 0.14° (vs ~10.5° full
+  arc). Prints singles 6.46e3 /s per arm, coincidences 4.45e3 /s, heralding
+  0.689 ≈ (1/√2)·(geometry ≈ 0.97), accidentals ~4e−2 /s @ τ = 1 ns, and a
+  built-in validation (open B ⟹ recovers the singles, rel. diff 0). Writes
+  `coincidence_scan.png` (singles + coincidences + heralding vs α; heralding
+  is flat ≈ 0.69 across the whole scan — near-degenerate filters keep the
+  twins mirrored, so only the filters set Rc/Rs, not geometry).
 - **`spdc_eq9_note.tex`** (`.log`) — derivation and write-up of the two Eq.(9)
   typo corrections (see below).
 
@@ -145,3 +162,13 @@ external α. Plot x-axis = α, secondary top axis = θm.
   2 orders) — that is the "intuitive"/filtered case (paper Fig. 3).
 - The detector-acceptance factor (dθ, azimuth) only rescales the y-axis; it does
   not change the shape or the orders-of-magnitude conclusions.
+- **Coincidences ≠ singles:** `Ns` is a marginal (its ∫dξi integrates the idler
+  over everything); the integrand `exp(−½(ξs−ξi)²)·sinc²` IS the joint
+  transverse-momentum density, so coincidences = same integral with the idler
+  restricted to detector B's acceptance. For the ±3° twin-detector setup the
+  geometry is near-lossless (polar blur 1/(W·k0) ≈ 0.007°, azimuthal 0.14°,
+  λ-walk-off ≤ 0.04° — all ≪ the 0.275°/±5.2° aperture) and the heralding
+  ratio is set by the idler-arm filter at the conjugate wavelength: with
+  identical 10 nm Gaussians in both arms, T(λs)·T(1620 nm−λs) = T², giving
+  Rc/Rs → 1/√2 ≈ 0.71 (model gives 0.689 incl. geometry). Detector QE /
+  losses multiply on top (not modeled).

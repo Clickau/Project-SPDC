@@ -126,7 +126,7 @@ def sinc(x):
 # Master equation: photon flux Ns per (dlam, dtheta) bin
 # ----------------------------------------------------------------------------
 def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
-       Nxi=200, half_window=8.0, lam_i_max=None,
+       Nxi=200, half_window=8.0, lam_i_max=None, idler_theta_window=None,
        lam_p=lam_p, Pp=Pp, L=L, W=W, deff=deff):
     """Signal photon flux (counts/s) into one (dlam x dtheta) bin, integrated
     over the full 2*pi azimuth of the emission cone.
@@ -163,6 +163,20 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
               (e.g. 3500e-9 = BBO transparency edge / limit of the index data).
               Without it, short-lam_s results are propped up by photon pairs
               that cannot actually be generated.
+    idler_theta_window : optional (lo, hi) in rad.  If given, the xi_i
+              quadrature only counts idlers whose EXTERNAL polar angle
+              arcsin(kappa_i / k0_i) lies inside [lo, hi], with
+              kappa_i = xi_i / W and k0_i = 2 pi / lam_i (Snell: kappa is
+              conserved across the exit face).  Angles are measured on the
+              OPPOSITE side of the pump from the signal (the model's Gaussian
+              exp(-(xi_s - xi_i)^2 / 2) peaks at xi_i = xi_s, i.e. at the
+              momentum-conserving mirror direction), so a detector at -3 deg
+              facing a signal at +3 deg is window ~ (2.7, 3.3) deg.  This
+              turns Ns into the JOINT rate "signal in this (dlam x dtheta)
+              bin AND idler inside the window" -- the coincidence kernel.
+              Idlers past total internal reflection (kappa_i > k0_i) are
+              excluded.  Default None integrates over everything and
+              reproduces the singles marginal exactly (unchanged code path).
 
     Returns
     -------
@@ -215,6 +229,16 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
 
     integrand = np.exp(-0.5 * (xi_s[..., None] - xi_i)**2) * sinc(0.5 * L * dkz)**2
     integrand[arg_i <= 0.0] = 0.0                        # no propagating idler
+
+    if idler_theta_window is not None:
+        # Keep only idlers exiting into the external polar window: Snell
+        # conserves kappa_i across the face, so sin(theta_i_ext) =
+        # kappa_i / k0_i; sin is monotonic on (-pi/2, pi/2) so compare sines.
+        lo, hi = idler_theta_window
+        sin_ti = (xi_i / W) * (lam_i[..., None] / (2 * pi))
+        integrand = np.where((sin_ti >= np.sin(lo)) & (sin_ti <= np.sin(hi)),
+                             integrand, 0.0)
+
     integral = np.trapezoid(integrand, x=offs, axis=-1)
 
     # --- prefactor (the corrected normalisation) --------------------------
