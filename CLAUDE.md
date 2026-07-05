@@ -63,9 +63,25 @@ root or `python plot_fig6.py` from inside `src/`. Run
   ideal cut angle (degenerate cone through the detector at normal incidence,
   θm = 29.24° for 3°), models the circular aperture exactly (polar span +
   azimuthal arc `2·arccos[(ρ²+R0²−r²)/(2ρR0)]` of the ring), prints the rate
-  (6.46e3 /s per detector; full ring 2.83e5 /s), and writes
-  `output/detector_scan_mysetup.png` (rate vs crystal rotation α — a broad
-  symmetric thin-crystal sinc² pattern, 2 orders down at α ≈ ±3.1°).
+  (1.24e3 /s detected per detector; full ring 5.40e4 /s; the loss-free values
+  were 6.46e3 / 2.83e5), and writes `output/detector_scan_mysetup.png` (rate
+  vs crystal rotation α — a broad symmetric thin-crystal sinc² pattern,
+  2 orders down at α ≈ ±3.1°).
+  EFFICIENCIES block (added 2026-07-05, datasheet values same day): pump
+  chain `ETA_PUMP = ETA_MIRROR_F01^N_MIRROR_F01 · ETA_HWP · T_CRYSTAL_IN`
+  = 0.92²·0.999·1 = 0.846 — PP is the LASER OUTPUT power and `PHYS_KW` feeds
+  `Pp = PP·ETA_PUMP` (33.8 mW) to `Ns`; collection chain `ETA_COLLECT =
+  ETA_COLLECT_BASE · T_FILTER_PEAK` = (1·0.958·0.80·1·0.30)·0.983 = 0.226,
+  with `ETA_COLLECT_BASE = T_CRYSTAL_OUT · ETA_MIRROR_P01 ·
+  ETA_FIBER_COUPLING · ETA_FIBER · ETA_APD`, multiplies `detected_rate`'s
+  outputs (the Gaussian in `filter_grid` stays peak-normalised;
+  `T_FILTER_PEAK` = 0.983 carries the peak). The 0.80 fiber coupling is
+  all-in (AR-coated lens assumed; 15% lens→core, 3.5% Fresnel at input,
+  negligible fiber propagation, 5% detector-box mating; 0.85·0.965·0.95 =
+  0.78 ≈ 0.80), so `ETA_FIBER` stays 1.0. Crystal AR-coated both sides ⟹
+  both `T_CRYSTAL_*` = 1. APD 0.30 @ 810 nm. Verified: all-1.0 reproduced
+  the loss-free numbers exactly, and a 0.5 collection × 0.8 pump override
+  scaled the rate by exactly 0.4.
 - **`src/coincidence_counts.py`** — signal–idler coincidences between TWO
   detectors at ±3° for the user's setup (reuses `detector_counts`'
   parameters and `ideal_cut_deg`; that script is untouched). Per-arm
@@ -74,12 +90,21 @@ root or `python plot_fig6.py` from inside `src/`. Run
   B's polar span, (b) λ weight `T_A(λs)·T_B(λi(λs))`, (c) the singles' arc
   factor dφ_A/2π replaced by the A-arc × mirrored-B-arc overlap smeared by
   the azimuthal momentum-correlation width σφ = (1/W)/(k0·sinθ) ≈ 0.14° (vs
-  ~10.5° full arc). Prints singles 6.46e3 /s per arm, coincidences 4.45e3 /s,
-  heralding 0.689 ≈ (1/√2)·(geometry ≈ 0.97), accidentals ~4e−2 /s @ τ = 1 ns,
-  and a built-in validation (open B ⟹ recovers the singles, rel. diff 0).
+  ~10.5° full arc). With the real efficiencies prints singles 1.24e3 /s per
+  arm, coincidences 192 /s, heralding 0.156 = η_B·0.689 (loss-free values:
+  6.46e3, 4.45e3, 0.689 ≈ (1/√2)·(geometry ≈ 0.97)), accidentals ~1.5e−3 /s
+  @ τ = 1 ns, and a built-in validation (open B ⟹ recovers the singles,
+  rel. diff 0).
   Writes `output/coincidence_scan.png` (singles + coincidences + heralding vs
   α; heralding is flat ≈ 0.69 across the whole scan — near-degenerate filters
   keep the twins mirrored, so only the filters set Rc/Rs, not geometry).
+  Component efficiencies come from `detector_counts`' EFFICIENCIES block
+  (ONE shared set, per the user — both arms have identical chains):
+  `collection_eta(arm)` = `ETA_COLLECT_BASE` × (`T_FILTER_PEAK` only if the
+  arm has a filter, so the open-B validation stays exact); singles ×η_arm,
+  coincidences ×η_A·η_B ⟹ heralding Rc/Rs_A picks up a factor η_B; pump
+  chain enters via the shared `PHYS_KW`. Accidentals use the η-scaled
+  singles.
 - **`src/spdc_eq9_note.tex`** (built log at `output/spdc_eq9_note.log`) —
   derivation and write-up of the two Eq.(9) typo corrections (see below).
 
@@ -181,5 +206,6 @@ external α. Plot x-axis = α, secondary top axis = θm.
   λ-walk-off ≤ 0.04° — all ≪ the 0.275°/±5.2° aperture) and the heralding
   ratio is set by the idler-arm filter at the conjugate wavelength: with
   identical 10 nm Gaussians in both arms, T(λs)·T(1620 nm−λs) = T², giving
-  Rc/Rs → 1/√2 ≈ 0.71 (model gives 0.689 incl. geometry). Detector QE /
-  losses multiply on top (not modeled).
+  Rc/Rs → 1/√2 ≈ 0.71 (model gives 0.689 incl. geometry). Component/detector
+  losses are now modeled (EFFICIENCIES block, 2026-07-05): they multiply the
+  heralding by η_B = 0.226, giving the observed-rate prediction 0.156.

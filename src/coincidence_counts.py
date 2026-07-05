@@ -25,8 +25,11 @@ is the same integral with
 With identical near-degenerate Gaussian filters in both arms the spectral
 factor is T(lam)^2 (dlam_i/dlam_s = -1 at degeneracy), so the heralding ratio
 is ~ integral(T^2)/integral(T) = 1/sqrt(2) ~ 0.71 -- the filters, not the
-geometry, set the coincidence/singles ratio in this loss-free model.  Real
-detector quantum efficiencies and optical losses multiply on top.
+geometry, set the coincidence/singles ratio in this loss-free model.
+Optical-component and detector efficiencies (detector_counts' EFFICIENCIES
+block, shared by both arms) multiply on top: singles scale by eta_arm,
+coincidences by eta_A * eta_B, so the heralding ratio Rc/Rs_A picks up a
+factor eta_B (the opposite arm's collection efficiency).
 
 Validation (printed on every run): opening arm B's polar window and filter and
 using arm A's plain arc must reproduce the singles rate of detector_counts.py.
@@ -68,9 +71,18 @@ ARM_B = dict(theta_deg=3.0, dist=625e-3, aperture=6e-3,
 TAU_C = 1e-9            # coincidence window (s), for the accidentals estimate
 
 LAM_P     = dc.LAM_P
-PHYS_KW   = dc.PHYS_KW
+PHYS_KW   = dc.PHYS_KW          # already includes the pump-chain ETA_PUMP
 LAM_I_MAX = dc.LAM_I_MAX
 SIGMA_KAPPA = 1.0 / dc.W_PUMP   # transverse-momentum correlation width, 1/m
+
+
+def collection_eta(arm):
+    """Collection-chain efficiency of one arm (values shared between arms,
+    from detector_counts' EFFICIENCIES block).  The bandpass peak transmission
+    only applies if the arm actually has a filter; singles scale by eta_arm,
+    coincidences by eta_A * eta_B."""
+    filt = dc.T_FILTER_PEAK if arm["filter_fwhm"] is not None else 1.0
+    return dc.ETA_COLLECT_BASE * filt
 
 OUTFILE = OUTDIR / "coincidence_scan.png"
 
@@ -194,17 +206,20 @@ def main():
               else 2 * LAM_P)
     cut = dc.ideal_cut_deg(ARM_A["theta_deg"], center)
 
+    eta_a, eta_b = collection_eta(ARM_A), collection_eta(ARM_B)
+
     geom = coincidence_geometry()
-    s_a = singles_rate(ARM_A, cut, lam, w_a, dlam)
-    s_b = singles_rate(ARM_B, cut, lam, w_b, dlam)
-    r_c = coincidence_rate(cut, lam, w_a * w_conj, dlam, geom)
+    s_a = eta_a * singles_rate(ARM_A, cut, lam, w_a, dlam)
+    s_b = eta_b * singles_rate(ARM_B, cut, lam, w_b, dlam)
+    r_c = eta_a * eta_b * coincidence_rate(cut, lam, w_a * w_conj, dlam, geom)
 
     # Validation: open arm B completely (full polar window, no filter, plain
     # arc-A azimuthal factor) -> must recover the singles marginal of arm A.
+    # (eta_a on both sides: the identity is about the integrals.)
     th, _, _ = geom
     _, dphi_a = arc_geometry(ARM_A, len(th))
     geom_open = (th, dphi_a / (2 * np.pi), (1e-4, np.radians(89.0)))
-    s_check = coincidence_rate(cut, lam, w_a, dlam, geom_open)
+    s_check = eta_a * coincidence_rate(cut, lam, w_a, dlam, geom_open)
 
     print("--- Two-detector setup (arms at +/-%.2f deg) ---" % ARM_A["theta_deg"])
     print(f"  pump {LAM_P*1e9:.0f} nm, {dc.PP*1e3:.0f} mW, W = {dc.W_PUMP*1e3:.1f} mm; "
@@ -215,7 +230,12 @@ def main():
         print(f"  arm {name}: {arm['theta_deg']:.2f} deg, "
               f"D = {arm['dist']*1e3:.0f} mm, "
               f"opening {arm['aperture']*1e3:.0f} mm, filter {filt}")
-    print("--- Rates (crystal at normal incidence, unit detector efficiency) ---")
+    print("--- Efficiencies ---")
+    print(f"  pump chain ETA_PUMP = {dc.ETA_PUMP:.3f}  "
+          f"({dc.PP*dc.ETA_PUMP*1e3:.1f} mW at the crystal)")
+    print(f"  collection: eta_A = {eta_a:.3f}, eta_B = {eta_b:.3f}  "
+          f"(coincidences scale as eta_A*eta_B = {eta_a*eta_b:.3f})")
+    print("--- Rates (crystal at normal incidence) ---")
     print(f"  singles arm A          : {s_a:.3e} /s")
     print(f"  singles arm B          : {s_b:.3e} /s")
     print(f"  coincidences           : {r_c:.3e} /s")
@@ -232,10 +252,10 @@ def main():
     wa_c, wb_c, wj_c = w_a[::4], w_b[::4], (w_a * w_conj)[::4]   # detector_counts
     geom_c = coincidence_geometry(Nth=41)
 
-    s_scan = np.array([singles_rate(ARM_A, t, lam_c, wa_c, dlam_c, Nth=41)
-                       for t in tms])
-    c_scan = np.array([coincidence_rate(t, lam_c, wj_c, dlam_c, geom_c)
-                       for t in tms])
+    s_scan = eta_a * np.array(
+        [singles_rate(ARM_A, t, lam_c, wa_c, dlam_c, Nth=41) for t in tms])
+    c_scan = eta_a * eta_b * np.array(
+        [coincidence_rate(t, lam_c, wj_c, dlam_c, geom_c) for t in tms])
 
     ipk_s, _ = com.summarize("singles, arm A", alphas, tms, s_scan)
     ipk_c, thresh_c = com.summarize("coincidences", alphas, tms, c_scan)

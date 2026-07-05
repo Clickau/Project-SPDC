@@ -13,6 +13,11 @@ Setup (requested 2026-07-05):
   detector at theta_s = 3 deg (lab/external), 625 mm from the crystal,
     6 mm circular opening
   Gaussian bandpass, 10 nm FWHM, centred on the degenerate wavelength
+  optical-component efficiencies (EFFICIENCIES block): pump chain
+    laser -> F01 mirror -> HWP -> F01 mirror -> crystal face scales the pump
+    power; collection chain crystal face -> P01 mirror -> bandpass peak ->
+    lens/fiber coupling -> fiber -> APD scales the detected rate.
+    Datasheet values filled in 2026-07-05.
 
 Detector model
 --------------
@@ -66,7 +71,41 @@ FILTER_CENTER = None   # centre wavelength, m; None -> degenerate 2*LAM_P
 
 LAM_I_MAX = com.LAM_I_MAX          # idler transparency cutoff (3500 nm)
 
-PHYS_KW = dict(lam_p=LAM_P, Pp=PP, L=L_CRY, W=W_PUMP, deff=DEFF)
+# ----------------------------------------------------------------------------
+# EFFICIENCIES -- datasheet/measured values (2026-07-05).  PP above is the
+# LASER OUTPUT power; the pump power reaching the crystal is PP * ETA_PUMP.
+# ----------------------------------------------------------------------------
+# pump path: laser -> mirror F01 -> half-wave plate -> mirror F01 -> crystal
+ETA_MIRROR_F01 = 0.920  # F01 mirror reflectance @ 405 nm
+N_MIRROR_F01   = 2      # number of F01 mirrors in the pump path
+ETA_HWP        = 0.999  # half-wave plate transmission @ 405 nm
+T_CRYSTAL_IN   = 1.0    # BBO entrance face: AR coated, no loss
+
+ETA_PUMP = ETA_MIRROR_F01 ** N_MIRROR_F01 * ETA_HWP * T_CRYSTAL_IN
+
+# collection path, per detector arm (both arms identical):
+#   crystal exit -> mirror P01 -> bandpass -> lens+fiber mount -> fiber -> APD
+T_CRYSTAL_OUT      = 1.0   # BBO exit face: AR coated, no loss
+ETA_MIRROR_P01     = 0.958 # P01 mirror reflectance @ 810 nm
+T_FILTER_PEAK      = 0.983 # bandpass PEAK transmission (the Gaussian shape in
+                           #   filter_grid stays normalised to 1; this scales it)
+ETA_FIBER_COUPLING = 0.80  # lens -> fiber -> detector box, all-in.  Assumes an
+                           #   AR-coated lens; budget: 15% loss coupling from
+                           #   the lens into the fiber core, 3.5% Fresnel loss
+                           #   at the fiber input, negligible loss in the fiber
+                           #   itself, 5% loss at the mating with the detector
+                           #   box  (0.85 * 0.965 * 0.95 = 0.78, rounded to 0.80)
+ETA_FIBER          = 1.0   # propagation loss negligible; connector/mating
+                           #   losses are already in ETA_FIBER_COUPLING
+ETA_APD            = 0.30  # APD detection efficiency @ 810 nm
+
+# collection chain WITHOUT the filter peak (so an open/unfiltered arm, as
+# allowed in coincidence_counts.py, is handled correctly there)
+ETA_COLLECT_BASE = (T_CRYSTAL_OUT * ETA_MIRROR_P01 * ETA_FIBER_COUPLING
+                    * ETA_FIBER * ETA_APD)
+ETA_COLLECT = ETA_COLLECT_BASE * T_FILTER_PEAK   # full chain incl. filter peak
+
+PHYS_KW = dict(lam_p=LAM_P, Pp=PP * ETA_PUMP, L=L_CRY, W=W_PUMP, deff=DEFF)
 
 OUTFILE = OUTDIR / "detector_scan_mysetup.png"
 
@@ -126,7 +165,7 @@ def detected_rate(theta_m_deg, lam, T, dlam, Nth=81, Nxi=200):
 
     aperture = np.trapezoid(dNdth * dphi / (2 * np.pi), x=th)
     ring     = np.trapezoid(dNdth, x=th)
-    return aperture, ring
+    return ETA_COLLECT * aperture, ETA_COLLECT * ring
 
 
 def filter_grid():
@@ -157,6 +196,12 @@ def main():
     print(f"  filter: Gaussian {FILTER_FWHM*1e9:.0f} nm FWHM at {center*1e9:.1f} nm")
     print(f"  ideal cut angle theta_m = {cut:.3f} deg "
           f"(degenerate cone through {THETA_S_DEG:.1f} deg at normal incidence)")
+    print("--- Efficiencies ---")
+    print(f"  pump chain (2x F01 mirror, HWP, crystal face): "
+          f"ETA_PUMP = {ETA_PUMP:.3f}  ->  "
+          f"{PP*ETA_PUMP*1e3:.1f} mW at the crystal")
+    print(f"  collection chain (crystal face, P01 mirror, filter peak, "
+          f"fiber coupling, fiber, APD): ETA_COLLECT = {ETA_COLLECT:.3f}")
     print("--- Result (crystal at normal incidence) ---")
     print(f"  photons on ONE detector : {n_det:.3e} /s")
     print(f"  full azimuthal ring     : {n_ring:.3e} /s "
