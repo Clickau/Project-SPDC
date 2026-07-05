@@ -36,6 +36,8 @@ detector_scan_mysetup.png -- the rate vs crystal rotation angle alpha.
 Run:  python detector_counts.py
 """
 
+from pathlib import Path
+
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -43,6 +45,8 @@ import matplotlib.pyplot as plt
 
 import spdc_physics as phys
 import detector_scan_common as com
+
+OUTDIR = Path(__file__).resolve().parent.parent / "output"
 
 # ----------------------------------------------------------------------------
 # PARAMETERS (this setup; paper values remain the defaults inside spdc_physics)
@@ -64,7 +68,7 @@ LAM_I_MAX = com.LAM_I_MAX          # idler transparency cutoff (3500 nm)
 
 PHYS_KW = dict(lam_p=LAM_P, Pp=PP, L=L_CRY, W=W_PUMP, deff=DEFF)
 
-OUTFILE = "detector_scan_mysetup.png"
+OUTFILE = OUTDIR / "detector_scan_mysetup.png"
 
 
 # ----------------------------------------------------------------------------

@@ -24,10 +24,14 @@ Physics from spdc_physics.py; scan machinery from detector_scan_common.py.
 Writes detector_scan.png.
 """
 
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 import detector_scan_common as com
+
+OUTDIR = Path(__file__).resolve().parent.parent / "output"
 
 
 def run(theta_det_deg=3.0, dth_det=2e-3, theta_m_cut=None,
@@ -80,8 +84,8 @@ def run(theta_det_deg=3.0, dth_det=2e-3, theta_m_cut=None,
                  f"$\\theta_m$ = {theta_m_cut:.2f}$^\\circ$, so $\\alpha$=0 is the peak)",
                  fontsize=11)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
-    fig.savefig("detector_scan.png", dpi=140)
-    print("saved detector_scan.png")
+    fig.savefig(OUTDIR / "detector_scan.png", dpi=140)
+    print(f"saved {OUTDIR / 'detector_scan.png'}")
 
 
 if __name__ == "__main__":

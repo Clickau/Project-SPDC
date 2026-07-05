@@ -16,17 +16,21 @@ Note: with our Sellmeier coefficients the collinear-degenerate point
 is unchanged.
 """
 
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
 import spdc_physics as phys
 
+OUTDIR = Path(__file__).resolve().parent.parent / "output"
+
 
 def make_figure(lam_min=430e-9, lam_max=1000e-9, dlam=1e-9,
                 th_max_deg=6.0, dth_mrad=0.5,
                 thetams_deg=(28.6, 28.8, 29.1, 29.4),
-                fname="spdc_fig6.png"):
+                fname=OUTDIR / "spdc_fig6.png"):
     lam_grid = np.arange(lam_min, lam_max + 1e-12, dlam)             # m
     dth = dth_mrad * 1e-3                                            # rad
     th_grid = np.arange(-th_max_deg, th_max_deg + 1e-9,

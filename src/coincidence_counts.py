@@ -39,6 +39,8 @@ rotation angle alpha).
 Run:  python coincidence_counts.py
 """
 
+from pathlib import Path
+
 import numpy as np
 from math import erf
 import matplotlib
@@ -48,6 +50,8 @@ import matplotlib.pyplot as plt
 import spdc_physics as phys
 import detector_scan_common as com
 import detector_counts as dc          # pump/crystal parameters, ideal_cut_deg
+
+OUTDIR = Path(__file__).resolve().parent.parent / "output"
 
 # ----------------------------------------------------------------------------
 # PARAMETERS -- the two detector arms.  theta_deg is the magnitude of the lab
@@ -68,7 +72,7 @@ PHYS_KW   = dc.PHYS_KW
 LAM_I_MAX = dc.LAM_I_MAX
 SIGMA_KAPPA = 1.0 / dc.W_PUMP   # transverse-momentum correlation width, 1/m
 
-OUTFILE = "coincidence_scan.png"
+OUTFILE = OUTDIR / "coincidence_scan.png"
 
 
 # ----------------------------------------------------------------------------

@@ -10,12 +10,22 @@ other (they share `spdc_physics.py` — **edit physics there, nowhere else**).
 `paper.pdf` is the reference paper (equations verified against the rendered PDF,
 not just text extraction). `code.txt` is the user's original Mathematica
 implementation of Eq.(9) that was debugged/rewritten in Python (see bug list
-below); keep it only for reference.
+below); keep it only for reference. Both live at the repo root (reference
+material, not source or generated output).
 
-## Files (post 2026-07-04 refactor: physics library + thin plot scripts)
+## Layout (post 2026-07-05 reorg: `src/` + `output/` folders)
 
-- **`spdc_physics.py`** — the physics library; all constants and physics live
-  here, the plot scripts contain none. Defines the SI constants, experiment
+All Python/LaTeX source lives in `src/`; all generated PNGs and the LaTeX log
+live in `output/`. Every plot script resolves its output path off `__file__`
+(`OUTDIR = Path(__file__).resolve().parent.parent / "output"`), so they write
+to `output/` correctly whether run as `python src/plot_fig6.py` from the repo
+root or `python plot_fig6.py` from inside `src/`. Run
+`python src/spdc_physics.py` to execute `sanity_check()` against the paper.
+
+## Files
+
+- **`src/spdc_physics.py`** — the physics library; all constants and physics
+  live here, the plot scripts contain none. Defines the SI constants, experiment
   parameters, BBO Sellmeier (`n_o`, `n_e_principal`, `n_eff`), `sinc`, `Np`,
   the unified flux `Ns(lam_s, theta_s, ...)` (numpy-broadcasts λs against θs,
   so one function serves both the Fig. 6 maps and the detector scans; keyword
@@ -24,60 +34,61 @@ below); keep it only for reference.
   exiting into a given external polar-angle window, turning `Ns` into the
   joint signal-AND-idler coincidence kernel; default None is the unchanged
   singles marginal), `tuning_curve`, and `crystal_rotation`. Running
-  `python spdc_physics.py` executes `sanity_check()` against the paper.
+  `python src/spdc_physics.py` executes `sanity_check()` against the paper.
   `Ns` also takes per-call overrides of the experiment parameters
   (`lam_p, Pp, L, W, deff`), and `tuning_curve`/`crystal_rotation` of `lam_p`;
   all default to the paper constants, so existing callers are bit-identical
   (sanity check re-verified after adding them).
-- **`detector_scan_common.py`** — shared machinery for the two detector-scan
-  diagrams: `LAM_I_MAX` (3500 nm idler cutoff), `spectra_vs_thetam` (the
-  θm × λ count matrix every panel derives from), `rotation_axes` (α axis +
-  θm secondary-axis interpolators), `two_order_crossings`, `summarize`,
-  `draw_panel`.
-- **`plot_fig6.py`** — Fig. 6 recreation. Writes `spdc_fig6.png`: the four
-  stacked log-scale λs–θs maps Fig. 6(e)–(h) with white-dashed
+- **`src/detector_scan_common.py`** — shared machinery for the two
+  detector-scan diagrams: `LAM_I_MAX` (3500 nm idler cutoff),
+  `spectra_vs_thetam` (the θm × λ count matrix every panel derives from),
+  `rotation_axes` (α axis + θm secondary-axis interpolators),
+  `two_order_crossings`, `summarize`, `draw_panel`.
+- **`src/plot_fig6.py`** — Fig. 6 recreation. Writes `output/spdc_fig6.png`:
+  the four stacked log-scale λs–θs maps Fig. 6(e)–(h) with white-dashed
   perfect-phase-matching tuning curves. Also runs the sanity check first.
-- **`plot_detector_scan.py`** — fixed detector at external angle θs = 3°,
+- **`src/plot_detector_scan.py`** — fixed detector at external angle θs = 3°,
   rotate the crystal, plot wavelength-integrated count vs crystal rotation
   angle α. Two panels: broadband + hard 805–815 nm top-hat. Writes
-  `detector_scan.png`.
-- **`plot_detector_scan_bandpass.py`** — same scan with reworked wavelength
-  selection, three panels: (1) broadband (all λ), (2) Gaussian bandpass FWHM
-  10 nm @ 810 nm, (3) monochromatic spectral density dN/dλ at 810 nm
-  (counts/s/nm). Writes `detector_scan_bandpass.png`.
-- **`detector_counts.py`** — photons/s on a real finite-aperture detector for
-  the USER'S OWN setup (not the paper's), all knobs in a PARAMETERS block at
-  the top (incl. the detector lab angle): pump 405 nm / 40 mW, collimated
+  `output/detector_scan.png`.
+- **`src/plot_detector_scan_bandpass.py`** — same scan with reworked
+  wavelength selection, three panels: (1) broadband (all λ), (2) Gaussian
+  bandpass FWHM 10 nm @ 810 nm, (3) monochromatic spectral density dN/dλ at
+  810 nm (counts/s/nm). Writes `output/detector_scan_bandpass.png`.
+- **`src/detector_counts.py`** — photons/s on a real finite-aperture detector
+  for the USER'S OWN setup (not the paper's), all knobs in a PARAMETERS block
+  at the top (incl. the detector lab angle): pump 405 nm / 40 mW, collimated
   W = 1 mm (2 mm beam dia.), BBO L = 0.1 mm, detector θs = 3° at 625 mm with
   6 mm circular opening, Gaussian bandpass 10 nm FWHM @ 810 nm. Solves the
   ideal cut angle (degenerate cone through the detector at normal incidence,
   θm = 29.24° for 3°), models the circular aperture exactly (polar span +
   azimuthal arc `2·arccos[(ρ²+R0²−r²)/(2ρR0)]` of the ring), prints the rate
   (6.46e3 /s per detector; full ring 2.83e5 /s), and writes
-  `detector_scan_mysetup.png` (rate vs crystal rotation α — a broad symmetric
-  thin-crystal sinc² pattern, 2 orders down at α ≈ ±3.1°).
-- **`coincidence_counts.py`** — signal–idler coincidences between TWO detectors
-  at ±3° for the user's setup (reuses `detector_counts`' parameters and
-  `ideal_cut_deg`; that script is untouched). Per-arm PARAMETERS (angle,
-  distance, aperture, filter; `filter_fwhm=None` = open arm). Coincidence =
-  the `Ns` integral with (a) `idler_theta_window` = arm B's polar span,
-  (b) λ weight `T_A(λs)·T_B(λi(λs))`, (c) the singles' arc factor dφ_A/2π
-  replaced by the A-arc × mirrored-B-arc overlap smeared by the azimuthal
-  momentum-correlation width σφ = (1/W)/(k0·sinθ) ≈ 0.14° (vs ~10.5° full
-  arc). Prints singles 6.46e3 /s per arm, coincidences 4.45e3 /s, heralding
-  0.689 ≈ (1/√2)·(geometry ≈ 0.97), accidentals ~4e−2 /s @ τ = 1 ns, and a
-  built-in validation (open B ⟹ recovers the singles, rel. diff 0). Writes
-  `coincidence_scan.png` (singles + coincidences + heralding vs α; heralding
-  is flat ≈ 0.69 across the whole scan — near-degenerate filters keep the
-  twins mirrored, so only the filters set Rc/Rs, not geometry).
-- **`spdc_eq9_note.tex`** (`.log`) — derivation and write-up of the two Eq.(9)
-  typo corrections (see below).
+  `output/detector_scan_mysetup.png` (rate vs crystal rotation α — a broad
+  symmetric thin-crystal sinc² pattern, 2 orders down at α ≈ ±3.1°).
+- **`src/coincidence_counts.py`** — signal–idler coincidences between TWO
+  detectors at ±3° for the user's setup (reuses `detector_counts`'
+  parameters and `ideal_cut_deg`; that script is untouched). Per-arm
+  PARAMETERS (angle, distance, aperture, filter; `filter_fwhm=None` = open
+  arm). Coincidence = the `Ns` integral with (a) `idler_theta_window` = arm
+  B's polar span, (b) λ weight `T_A(λs)·T_B(λi(λs))`, (c) the singles' arc
+  factor dφ_A/2π replaced by the A-arc × mirrored-B-arc overlap smeared by
+  the azimuthal momentum-correlation width σφ = (1/W)/(k0·sinθ) ≈ 0.14° (vs
+  ~10.5° full arc). Prints singles 6.46e3 /s per arm, coincidences 4.45e3 /s,
+  heralding 0.689 ≈ (1/√2)·(geometry ≈ 0.97), accidentals ~4e−2 /s @ τ = 1 ns,
+  and a built-in validation (open B ⟹ recovers the singles, rel. diff 0).
+  Writes `output/coincidence_scan.png` (singles + coincidences + heralding vs
+  α; heralding is flat ≈ 0.69 across the whole scan — near-degenerate filters
+  keep the twins mirrored, so only the filters set Rc/Rs, not geometry).
+- **`src/spdc_eq9_note.tex`** (built log at `output/spdc_eq9_note.log`) —
+  derivation and write-up of the two Eq.(9) typo corrections (see below).
 
 (History: the pre-refactor layout had the physics inside `spdc_fig6.py` and a
 duplicated flux kernel in each detector script. The unified `Ns` was verified
 **bitwise identical** to both old kernels — and `tuning_curve` /
 `crystal_rotation` / the sanity totals likewise — before the old files were
-deleted.)
+deleted. On 2026-07-05 the flat file layout was split into `src/` + `output/`;
+all scripts re-verified to reproduce the same numbers after the move.)
 
 ## Master equation — Eq.(9), angle-resolved signal flux
 
