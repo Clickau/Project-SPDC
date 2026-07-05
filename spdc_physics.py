@@ -126,12 +126,17 @@ def sinc(x):
 # Master equation: photon flux Ns per (dlam, dtheta) bin
 # ----------------------------------------------------------------------------
 def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
-       Nxi=200, half_window=8.0, lam_i_max=None):
+       Nxi=200, half_window=8.0, lam_i_max=None,
+       lam_p=lam_p, Pp=Pp, L=L, W=W, deff=deff):
     """Signal photon flux (counts/s) into one (dlam x dtheta) bin, integrated
     over the full 2*pi azimuth of the emission cone.
 
     Evaluates the Appendix intermediate equation (the corrected Eq. 9
     normalisation -- see the module docstring for the typo discussion).
+
+    The experiment parameters (lam_p, Pp, L, W, deff) can be overridden per
+    call; they default to the module-level paper values, so existing callers
+    are unaffected.
 
     Parameters
     ----------
@@ -166,6 +171,11 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
     lam_s = np.asarray(lam_s, dtype=float)
     th    = np.abs(np.asarray(theta_s, dtype=float))     # cone symmetry
     lam_s, th = np.broadcast_arrays(lam_s, th)
+
+    # Pump frequency and photon flux for the (possibly overridden) pump
+    # parameters; identical to the module-level omega_p, Np at the defaults.
+    omega_p = 2 * pi * c / lam_p
+    Np      = Pp / (hbar * omega_p)
 
     # Energy conservation: 1/lam_p = 1/lam_s + 1/lam_i.
     lam_i = lam_s * lam_p / (lam_s - lam_p)
@@ -228,9 +238,10 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
 # ----------------------------------------------------------------------------
 # Perfect phase-matching tuning curve  theta_ext(lam_s)
 # ----------------------------------------------------------------------------
-def tuning_curve(lam_array, theta_m):
+def tuning_curve(lam_array, theta_m, lam_p=lam_p):
     """External emission angle (deg) of exact phase matching vs signal
-    wavelength, for pump angle theta_m (rad).  Solves
+    wavelength, for pump angle theta_m (rad).  lam_p overridable per call
+    (defaults to the paper pump).  Solves
 
         sqrt(ks^2 - kappa^2) + sqrt(ki^2 - kappa^2) = kp
 
@@ -267,10 +278,11 @@ def tuning_curve(lam_array, theta_m):
 # ----------------------------------------------------------------------------
 # Crystal rotation <-> internal phase-matching angle (entrance-face refraction)
 # ----------------------------------------------------------------------------
-def crystal_rotation(theta_m, theta_m_cut):
+def crystal_rotation(theta_m, theta_m_cut, lam_p=lam_p):
     """External crystal rotation angle alpha (deg, signed) that produces the
     internal phase-matching angle theta_m (deg), for a crystal cut at
-    theta_m_cut (deg) (= theta_m at normal incidence, alpha = 0).
+    theta_m_cut (deg) (= theta_m at normal incidence, alpha = 0).  lam_p
+    overridable per call (defaults to the paper pump).
 
     The pump refracts at the entrance face; tangential-k matching for the
     extraordinary pump wave gives

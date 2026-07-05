@@ -22,6 +22,10 @@ below); keep it only for reference.
   options: `external` angle convention, `Nxi` quadrature points, `lam_i_max`
   idler cutoff), `tuning_curve`, and `crystal_rotation`. Running
   `python spdc_physics.py` executes `sanity_check()` against the paper.
+  `Ns` also takes per-call overrides of the experiment parameters
+  (`lam_p, Pp, L, W, deff`), and `tuning_curve`/`crystal_rotation` of `lam_p`;
+  all default to the paper constants, so existing callers are bit-identical
+  (sanity check re-verified after adding them).
 - **`detector_scan_common.py`** — shared machinery for the two detector-scan
   diagrams: `LAM_I_MAX` (3500 nm idler cutoff), `spectra_vs_thetam` (the
   θm × λ count matrix every panel derives from), `rotation_axes` (α axis +
@@ -38,6 +42,17 @@ below); keep it only for reference.
   selection, three panels: (1) broadband (all λ), (2) Gaussian bandpass FWHM
   10 nm @ 810 nm, (3) monochromatic spectral density dN/dλ at 810 nm
   (counts/s/nm). Writes `detector_scan_bandpass.png`.
+- **`detector_counts.py`** — photons/s on a real finite-aperture detector for
+  the USER'S OWN setup (not the paper's), all knobs in a PARAMETERS block at
+  the top (incl. the detector lab angle): pump 405 nm / 40 mW, collimated
+  W = 1 mm (2 mm beam dia.), BBO L = 0.1 mm, detector θs = 3° at 625 mm with
+  6 mm circular opening, Gaussian bandpass 10 nm FWHM @ 810 nm. Solves the
+  ideal cut angle (degenerate cone through the detector at normal incidence,
+  θm = 29.24° for 3°), models the circular aperture exactly (polar span +
+  azimuthal arc `2·arccos[(ρ²+R0²−r²)/(2ρR0)]` of the ring), prints the rate
+  (6.46e3 /s per detector; full ring 2.83e5 /s), and writes
+  `detector_scan_mysetup.png` (rate vs crystal rotation α — a broad symmetric
+  thin-crystal sinc² pattern, 2 orders down at α ≈ ±3.1°).
 - **`spdc_eq9_note.tex`** (`.log`) — derivation and write-up of the two Eq.(9)
   typo corrections (see below).
 
