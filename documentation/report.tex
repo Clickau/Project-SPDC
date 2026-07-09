@@ -1,0 +1,173 @@
+% arara: pdflatex: { shell: yes } until !found('log', '\\(?(R|r)e\\)?run (to get|LaTeX)')
+\documentclass[a4paper,
+DIV=13,
+12pt,
+BCOR=10mm,
+department=FakEI,
+%lucida,
+%KeepRoman,
+twoside,
+parskip=half,
+automark,
+logostyle=flat,
+%headsepline,
+]{OTHRartcl}
+
+
+\usepackage[ngerman,english]{babel}
+\usepackage[hidelinks]{hyperref}
+
+\date{\today}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{gensymb}
+
+
+
+
+
+
+\usepackage[headsepline]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\automark[section]{section}
+\automark*[subsection]{}
+
+\documenttype{Project Report}
+
+\title{Optimization of an entangled photon source}
+\author{Cosmin-Andrei Popan}
+\studentid{3434442}
+\department{Elektro- und Informationstechnik}
+\studyprogramme{Bachelor Mechatronik}
+\startingdate{16.03.2026}
+\closingdate{27.07.2026}
+\firstadvisor{Prof. Dr. Ioana Serban}
+\secondadvisor{Prof. Dr. Robert Sattler}
+
+
+% Hiermit trägt pdflatex die PDF-Metadaten des erzeugten Dokuments ein:
+\hypersetup{pdftitle={\csname @title\endcsname{}},%
+	pdfauthor={\csname @author\endcsname{}},%
+	%pdfsubject={Optionaler Untertitel / englischer Titel},%
+	%pdfkeywords={Optionale Schlüsselwörter}
+	}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\cleardoublepage
+
+
+\section{Introduction}
+
+This report documents the results of a research project carried out in the Quantum Technology Laboratory of the OTH Regensburg with the aim of optimizing an entangled photon source based on type I spontaneous parametric down-conversion (SPDC) in $\beta$-barium borate (BBO) crystals. Firstly, the theory of the SPDC process and the existing laboratory setup are described, highlighting the problems that need to be addressed. Afterwards, a new setup that aims to improve the photon coincidence rates is proposed and implemented, followed by a computer simulation written in Python that compares the measured photon rates with the ones predicted by the theory. Finally, an experiment to measure the Clauser-Horne-Shimony-Holt (CHSH) inequality is performed.
+
+The results show a 20-fold improvement in the coincidence counts, with a CHSH statistic of $S = 2.36 \pm 0.04$, proving the presence of strong entanglement inside the photon pairs.
+
+
+
+
+\section{Theoretical Background}
+
+Spontaneous parametric down-conversion is a non-linear optical process that converts a photon of higher energy (called a pump photon) into a pair of photons of lower energy (called the signal and idler photons) subject to energy and momentum conservation. This constrant imposed by the conservation laws is referred to as phase-matching. The effect has first been observed in the 1960s and has since become a common technique for developing single-photon sources. One of the possible phase-matching schemes is Type-I SPDC, in which the signal and idler photons that are produced have the same polarization. The necessary conditions for this process can be met by using a birefringent crystal such as $\beta$-BBO \cite{spdc-intensity}.
+
+\subsection{Birefringence in BBO crystals}
+
+Birefringence is the optical property of some materials of having an index of refraction that depends on the polarization and direction of light. BBO is a birefringent crystal with a single optical axis. Light propagating through it with polarization perpendicular to its optical axis experiences the so-called ordinary index of refraction $n_o$ and is therefore known as an ordinary ray, whereas light whose polarization lies in the same plane as the optical axis experiences the direction-dependent extraordinary index of refraction $n_e(\theta)$, where $\theta$ is the angle between the extraordinary ray and the optical axis. A ray with a different polarization than the two cases described above gets split into an ordinary component and an extraordinary component, each experiencing the respective index of refraction. Denoting with $n_e = n_e(90 \degree)$ the refractive index experienced by the extraordinary ray that propagates perpendicular to the optical axis, the extraordinary refractive index for an arbitrary propagation direction is described by \cite{birefringence}:
+
+\begin{equation}
+    \frac{1}{n_e^2(\theta)} = \frac{\cos^2 (\theta)}{n_o^2} + \frac{\sin^2 (\theta)}{n_e^2}
+    \label{n_e_theta}
+\end{equation}
+
+
+The ordinary and principal extraordinary refractive indices are described as functions of the wavelength by the Sellmeier equations \cite{sellmeier}:
+
+\begin{equation}
+    n_o^2 = 2.7359 + \frac{0.01878}{\lambda^2 - 0.01822} - 0.01354 \lambda^2
+    \label{sellmeier_n_o}
+\end{equation}
+
+\begin{equation}
+    n_e^2 = 2.3753 + \frac{0.01224}{\lambda^2 - 0.01667} - 0.01516 \lambda^2
+    \label{sellmeier_n_e}
+\end{equation}
+
+
+\subsection{Spontaneous phase-matching in BBO crystals}
+
+Type-I spontaneous parametric down-conversion is the process whereby a pump photon of frequency $\omega_p$ enters the BBO crystal as an extraordinary ray at an angle $\theta_m$ (called the phase-matching angle) with respect to the optical axis and gets converted into signal-idler photon pair with frequencies $\omega_s$, $\omega_i$ that exit the crystal as ordinary rays. Therefore, the polarization of the signal and idler rays is perpendicular to that of the pump. Figure \ref{fig:spdc_feynman} depicts the corresponding Feynman diagram. Using $E=\hbar \omega$ and $\mathbf{p} = \hbar \mathbf{k}$, the energy and momentum conservation can be expressed as:
+
+\begin{equation}
+    \omega_p = \omega_s + \omega_i
+    \label{energy_conservation}
+\end{equation}
+
+\begin{equation}
+    \mathbf{k}_p = \mathbf{k}_s + \mathbf{k}_i
+    \label{momentum_conservation}
+\end{equation}
+
+where $\mathbf{k}$ are the respective wave vectors, with the dispersion relation $k=\frac{n\omega}{c}$ \cite{spdc-intensity}.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.5]{spdc_feynman.png}}
+\caption{Feynman diagram for SPDC pair production. Figure taken from \cite{spdc_feynman}.}
+\label{fig:spdc_feynman}
+\end{figure}
+
+Let $\theta_s$ and $\theta_i$ be the angles formed by the pump ray with the signal and idler rays, respectively (inside the crystal). In the case of degenerate down-conversion, $\omega_s = \omega_i = \frac{\omega_p}{2}$. The momentum conservation in the transverse direction gives $\frac{n_o \omega_s}{c} \cdot \sin (\theta_s) = \frac{n_o \omega_i}{c} \cdot \sin (\theta_i)$, which means $\theta_s = \theta_i$. Longitudinal momentum conservation becomes:
+
+\begin{equation}
+    n_e(\lambda_p, \theta_m) = n_o(\lambda_s) \cdot \cos (\theta_s)
+    \label{momentum_conservation_degenerate}
+\end{equation}
+
+Therefore, the photons are symmetric?? something about refraction at exit
+
+\subsection{SPDC intensity}
+
+\subsection{Temperature dependence of laser wavelength}
+
+\subsection{Photon entanglement and the CHSH inequality}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\cleardoublepage
+\appendix
+\listoffigures
+
+%\cleardoublepage
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+%\cleardoublepage
+\makedeclaration
+
+\end{document}
