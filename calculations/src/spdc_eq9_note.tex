@@ -3,9 +3,9 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{siunitx}
 
-\title{Two normalization errors in Eq.~(9) of Hsu \& Lai,\\
+\title{On the normalization of Eqs.~(7)--(9) of Hsu \& Lai,\\
 \emph{Angle-Resolved Spectroscopy of Parametric Fluorescence}\\
-\large (arXiv:1302.6226) --- and the corrected flux formula}
+\large (arXiv:1302.6226) --- angle conventions and the genuine misprints}
 \author{}
 \date{}
 
@@ -17,15 +17,18 @@
 
 \noindent
 The paper's master formula for the angle-resolved Type-I SPDC photon flux
-(used to compute Fig.~6) is printed, in the appendix, as Eq.~(9). Evaluated
-\emph{literally}, that printed equation gives an efficiency
-$\eta = 2N_s/N_p \approx \num{1.6e-11}$, which is $\sim 17\times$ below the
-paper's own Table~I / Fig.~6 value $\eta \approx \num{2.7e-10}$.
-Below we trace the chain of substitutions and isolate \textbf{two independent
-typos}: a factor of $4$ in the prefactor constant, and a factor
-$2\pi n_s^2 \approx 17$ lost in the angular Jacobian.
-The answer key (the paper's own quoted $\eta$ and $2N_s\approx\SI{4.2e7}{s^{-1}}$)
-decides which forms are correct.
+(used to compute Fig.~6) is Eq.~(9). An earlier version of this note claimed
+that the printed Eq.~(9) was $2\pi n_s^2 \approx 17\times$ too low, attributing
+the deficit to a dropped coefficient in the angular Jacobian. That claim was
+\textbf{wrong}: it rested on reading $\theta_s$ as the \emph{internal}
+(in-crystal) angle. The paper's Fig.~2 defines the angle conventions
+explicitly --- ``The angles $\theta_s'$ and $\theta_s$ are, respectively,
+internal and external angles formed by the signal and pump wave vectors'' ---
+and with $\theta_s$ the \emph{external} (laboratory) angle the printed
+Eq.~(9) is exactly correct as a flux density per unit azimuth. Its only
+blemish is a dropped $\dd\phi$ symbol. The genuine misprints are confined to
+the main-text Eq.~(7): the prefactor constant ($2\pi^4$ vs the appendix's
+correct $8\pi^4$) and the sign of the Gaussian exponent.
 
 \section*{The relevant printed equations}
 
@@ -36,15 +39,16 @@ N_s(\omega_s,\kappa_s) =
 {\mathbf{2\pi^4}\, c^3\varepsilon_0 n_s n_i n_p}\,
 \dd\omega_s\,\dd^2\kappa_s
 \int \dd^2\xi\,
-e^{-\frac12\xi^2}\,
+e^{+\frac12\xi^2}\,
 \sinc^2\!\left(\tfrac12 L\,\Delta k_z\right).
 \tag{7}
 \end{equation}
-(The exponent is misprinted with a $+$ sign in the paper; it must be
+(Both bold-faced items are misprints; see below. The exponent must be
 $-\tfrac12\xi^2$, as the appendix has it.)
 
 \paragraph{Appendix intermediate} (after relabeling $\xi\to\xi_i$ and the
-$\phi$ saddle-point integral, which supplies the $\sqrt{2\pi}$):
+saddle-point integral over the \emph{relative} azimuth between
+$\kappa_s$ and $\kappa_i$, which supplies the $\sqrt{2\pi}$):
 \begin{equation}
 N_s =
 \underbrace{\frac{\hbar d_{\mathrm{eff}}^2\,\omega_s\omega_i\omega_p L^2 N_p\,\sqrt{2\pi}}
@@ -54,6 +58,7 @@ N_s =
 \sinc^2\!\left(\tfrac12 L\,\Delta k_z\right).
 \label{eq:inter}
 \end{equation}
+Note the signal azimuth $\dd\phi$ is still present here.
 
 \paragraph{Eq.~(9), as printed} (target: variables $\lambda_s,\theta_s$):
 \begin{equation}
@@ -67,107 +72,119 @@ N_s(\lambda_s,\theta_s) =
 \tag{9}
 \end{equation}
 
-\section*{Error 1: the factor of 4 ($2\pi^4$ vs $8\pi^4$)}
+\section*{The angle convention: $\theta_s$ is the laboratory angle}
 
-Going from Eq.~(7) to \eqref{eq:inter} the paper changes the constant
-$2\pi^4 \to 8\pi^4$ while describing it as the variable relabeling
+The paper primes all in-medium quantities: Eq.~(3) and Eq.~(6) use the
+internal angle $\theta_s'$, and Eq.~(6) and the appendix define the in-medium
+wavenumbers as $k_s' = n_s\omega_s/c$, etc. Accordingly, the appendix's
+substitution ``$\kappa_s = k_s\sin\theta_s$'' (unprimed $k_s$, unprimed
+$\theta_s$) means the \emph{vacuum} wavenumber $k_s = k_0 = 2\pi/\lambda_s$
+with the \emph{external} angle. This is also the physically correct statement
+of the conserved transverse momentum: $\kappa$ is continuous across the flat
+exit face (Snell), so
+\begin{equation}
+\kappa_s \;=\; k_0\sin\theta_s^{\text{ext}}
+        \;=\; k_s'\sin\theta_s'^{\,\text{int}},
+\qquad k_0 = \frac{2\pi}{\lambda_s},\quad k_s' = \frac{2\pi n_s}{\lambda_s}.
+\end{equation}
+Both parametrizations describe the same $\kappa_s$; the external one carries
+no $n_s$.
+
+\section*{Deriving Eq.~(9) from the appendix (external angle)}
+
+Carry \eqref{eq:inter} to $(\lambda_s,\theta_s)$ via
+\begin{align}
+\textbf{(S1)}\quad
+\dd\omega_s &= \frac{2\pi c}{\lambda_s^2}\,\dd\lambda_s
+&&\left(\omega_s=\tfrac{2\pi c}{\lambda_s}\right),\\[4pt]
+\textbf{(S2)}\quad
+\kappa_s\,\dd\kappa_s
+&= \tfrac12 k_0^2\,\sin(2\theta_s)\,\dd\theta_s
+= \frac{2\pi^2}{\lambda_s^2}\,\sin(2\theta_s)\,\dd\theta_s
+&&\left(\kappa_s=k_0\sin\theta_s\right),
+\end{align}
+with $\omega_s\omega_i = 4\pi^2 c^2/(\lambda_s\lambda_i)$ inside $A_0$ and the
+signal azimuth $\dd\phi$ kept as a differential. The numeric coefficient is
+\begin{equation}
+\frac{1}{8\pi^4}\cdot 4\pi^2 \cdot 2\pi \cdot 2\pi^2 = 2\pi ,
+\end{equation}
+so
+\begin{equation}
+\boxed{\;
+N_s(\lambda_s,\theta_s,\phi) =
+2\pi\sqrt{2\pi}\,
+\frac{\hbar d_{\mathrm{eff}}^2\,\omega_p L^2 N_p}
+{\varepsilon_0\, n_s n_i n_p\,\lambda_s^5\lambda_i}\,
+\sin(2\theta_s)\,\dd\lambda_s\,\dd\theta_s\,\dd\phi
+\int \dd\xi_i\, e^{-\frac12(\xi_s-\xi_i)^2}\,
+\sinc^2\!\left(\tfrac12 L\,\Delta k_z\right)
+\;}
+\label{eq:corrected}
+\end{equation}
+which is the printed Eq.~(9) \emph{verbatim}, apart from the $\dd\phi$. The
+printed equation is therefore a flux density per unit azimuth; the full ring
+carries an extra factor $\int_0^{2\pi}\dd\phi = 2\pi$. This is not a
+numerical error in the paper: Sec.~III.D states explicitly that the flux is
+integrated over ``$\phi = 0 \to 2\pi$'', so the $2\pi$ enters at the
+numerical-integration stage. The only defect of Eq.~(9) is the missing
+$\dd\phi$ symbol.
+
+Here $\xi_s=\kappa_s W$ and
+$\Delta k_z = \sqrt{k_s'^2-\kappa_s^2} + \sqrt{k_i'^2-(\xi_i/W)^2} - k_p'$
+(appendix form; the in-medium wavenumbers stay primed). Integrating
+\eqref{eq:corrected} over the azimuth reproduces
+$\eta=2N_s/N_p=\num{2.72e-10}$ and $2N_s=\SI{4.44e7}{s^{-1}}$
+($\theta_m=\SI{29.12}{\degree}$, $P_p=\SI{80}{mW}$), matching the paper's
+Table~I. Implemented in \texttt{spdc\_physics.py} (\texttt{Ns} with
+\texttt{external=True}; the equivalent internal-angle parametrization
+$\kappa_s = k_s'\sin\theta_s'$, whose Jacobian carries $\tfrac12 k_s'^2 =
+\tfrac12 n_s^2 k_0^2$, is available as \texttt{external=False} and yields the
+identical total flux).
+
+\paragraph{Where the old ``$2\pi n_s^2$'' claim came from.}
+Reading ``$\kappa_s = k_s\sin\theta_s$'' with the \emph{in-medium}
+$k_s = 2\pi n_s/\lambda_s$ (and hence $\theta_s$ internal) makes the Jacobian
+(S2) acquire a factor $n_s^2$, and folding the azimuthal $2\pi$ into the
+prefactor as well makes the printed Eq.~(9) appear short by
+$2\pi n_s^2 = 2\pi(1.660)^2 \approx 17.3$. Under Fig.~2's convention neither
+factor is missing: the $n_s^2$ never belonged there, and the $2\pi$ is the
+azimuth integral the authors perform explicitly.
+
+\section*{The genuine misprints: Eq.~(7)}
+
+\paragraph{The factor of 4 ($2\pi^4$ vs $8\pi^4$).}
+Eq.~(7) and \eqref{eq:inter} are the same equation up to the relabeling
 $\int\dd^2\xi \to \int\dd^2\xi_i$ with $\xi=(\kappa_s+\kappa_i)W$,
 $\xi_i=\kappa_i W$. At fixed $\kappa_s$ this is a pure \emph{shift},
 \begin{equation}
 \int \dd^2\xi\; f(\xi) \;=\; \int \dd^2\xi_i\; f(\xi_s+\xi_i),
 \qquad \text{Jacobian}=1,
 \end{equation}
-which cannot alter the prefactor. Hence one of the two printed constants is a
-misprint. Numerically, $8\pi^4$ reproduces $\eta=\num{2.72e-10}$ (matches the
-paper); $2\pi^4$ would give $\num{1.09e-9}$, $4\times$ too large.
-\textbf{Conclusion: $8\pi^4$ is correct; the main-text $2\pi^4$ is the typo.}
+which cannot alter the prefactor, so one of the two printed constants is a
+misprint. The appendix's $8\pi^4$ is the correct one, on three independent
+grounds: (i)~it reproduces the paper's simulated $\eta$
+(Table~I: $\num{2.6e-10}$; our integral: $\num{2.72e-10}$);
+(ii)~it agrees with the closed-form Eq.~(8) --- taken from the independent
+Ref.~[18] (Koch et al., IEEE J.\ Quantum Electron.\ \textbf{31}, 769 (1995))
+--- which evaluated directly gives $\eta = \num{2.63e-10}$;
+(iii)~it matches the measured $\eta \approx$ \numrange{2.7e-10}{2.8e-10}.
+With $2\pi^4$ everything would sit $4\times$ above all three.
 
-\section*{Error 2: the factor $2\pi n_s^2\approx 17$ (angular Jacobian)}
-
-We carry \eqref{eq:inter} to $(\lambda_s,\theta_s)$ via three substitutions.
-
-\begin{align}
-\textbf{(S1)}\quad
-\dd\omega_s &= \frac{2\pi c}{\lambda_s^2}\,\dd\lambda_s
-&&\left(\omega_s=\tfrac{2\pi c}{\lambda_s}\right),\\[4pt]
-\textbf{(S2)}\quad
-\int \dd\phi &= 2\pi
-&&(\text{isotropic in azimuth}),\\[4pt]
-\textbf{(S3)}\quad
-\kappa_s\,\dd\kappa_s
-&= \tfrac12 k_s^2\,\sin(2\theta_s)\,\dd\theta_s
-= \frac{2\pi^2 n_s^2}{\lambda_s^2}\,\sin(2\theta_s)\,\dd\theta_s
-&&\left(\kappa_s=k_s\sin\theta_s,\;
-k_s=\tfrac{2\pi n_s}{\lambda_s}\right).
-\end{align}
-Also $\omega_s\omega_i = 4\pi^2 c^2/(\lambda_s\lambda_i)$ inside $A_0$.
-Multiplying $A_0$ by (S1)$\cdot$(S2)$\cdot$(S3):
-\begin{equation}
-P_{\text{correct}}
-= 4\pi^2\sqrt{2\pi}\,
-\frac{\hbar d_{\mathrm{eff}}^2\,\omega_p L^2 N_p\, n_s}
-{\varepsilon_0 n_i n_p\,\lambda_s^5\lambda_i},
-\qquad\text{vs.}\qquad
-P_{\text{printed}}
-= 2\pi\sqrt{2\pi}\,
-\frac{\hbar d_{\mathrm{eff}}^2\,\omega_p L^2 N_p}
-{\varepsilon_0 n_s n_i n_p\,\lambda_s^5\lambda_i}.
-\end{equation}
-Their ratio is
-\begin{equation}
-\boxed{\;
-\frac{P_{\text{correct}}}{P_{\text{printed}}}
-= \frac{4\pi^2 n_s}{2\pi/n_s}
-= 2\pi n_s^2
-= 2\pi(1.660)^2 = 17.3.
-\;}
-\end{equation}
-
-\paragraph{Where it hides.} Writing the full Jacobian
-$J$ for $\dd\omega_s\,\dd^2\kappa_s \to \sin(2\theta_s)\,\dd\lambda_s\,\dd\theta_s$,
-\begin{equation}
-J_{\text{correct}}=\frac{2\pi c}{\lambda_s^2}\cdot\tfrac12 k_s^2\cdot 2\pi
-= \frac{8\pi^4 n_s^2 c}{\lambda_s^4},
-\qquad
-J_{\text{printed}}=\frac{4\pi^3 c}{\lambda_s^4},
-\qquad
-\frac{J_{\text{correct}}}{J_{\text{printed}}}=2\pi n_s^2 .
-\end{equation}
-The printed Eq.~(9) retains the $1/\lambda_s^2$ \emph{scaling} of $k_s^2$
-(visible as the $\lambda_s^5$ in the denominator) but drops the
-$2\pi n_s^2$ \emph{coefficient} of $\tfrac12 k_s^2$. The $n_s^2$ can only come
-from $k_s=2\pi n_s/\lambda_s$; thus the slip is entirely in \textbf{(S3)},
-the $\kappa_s\,\dd\kappa_s\to\sin(2\theta_s)\,\dd\theta_s$ step.
-
-\section*{Corrected Eq.~(9)}
-
-\begin{equation}
-\boxed{\;
-N_s(\lambda_s,\theta_s) =
-4\pi^2\sqrt{2\pi}\,
-\frac{\hbar d_{\mathrm{eff}}^2\,\omega_p L^2 N_p\, n_s}
-{\varepsilon_0\, n_i n_p\,\lambda_s^5\lambda_i}\,
-\sin(2\theta_s)\,\dd\lambda_s\,\dd\theta_s
-\int \dd\xi_i\, e^{-\frac12(\xi_s-\xi_i)^2}\,
-\sinc^2\!\left(\tfrac12 L\,\Delta k_z\right)
-\;}
-\end{equation}
-equivalently $N_s = (2\pi n_s^2)\times[\text{printed Eq.~(9)}]$, with
-$\xi_s=k_s\sin\theta_s\,W$, $k_s=2\pi n_s/\lambda_s$, and
-$\Delta k_z = k_s\cos\theta_s + \sqrt{k_i^2-(\xi_i/W)^2} - k_p$.
-This reproduces $\eta=\num{2.72e-10}$ and $2N_s=\SI{4.44e7}{s^{-1}}$
-($\theta_m=\SI{29.12}{\degree}$, $P_p=\SI{80}{mW}$), matching the paper's
-Table~I. Implemented in \texttt{spdc\_fig6.py}.
+\paragraph{The exponent sign.}
+Eq.~(7) prints $e^{+\frac12\xi^2}$, which diverges; the appendix's
+$e^{-\frac12|\xi_s+\xi_i|^2}$ is correct.
 
 \paragraph{Summary.}
 \begin{center}
 \begin{tabular}{lll}
 \hline
-Typo & Location & Effect\\
+Item & Location & Status\\
 \hline
-$e^{+\frac12\xi^2}$ & Eq.~(7) exponent & sign; should be $-$ (self-fixed in appendix)\\
-$2\pi^4$ & Eq.~(7) prefactor & $\times 4$ too large; correct value $8\pi^4$\\
-dropped $2\pi n_s^2$ & Eq.~(9), step (S3) & $\times 1/17$ too small in the $\kappa_s\dd\kappa_s$ Jacobian\\
+$e^{+\frac12\xi^2}$ & Eq.~(7) exponent & misprint; must be $-$ (appendix has it right)\\
+$2\pi^4$ & Eq.~(7) prefactor & misprint; correct value $8\pi^4$ (appendix, Eq.~(8), experiment)\\
+missing $\dd\phi$ & Eq.~(9) & notation only; Eq.~(9) is a per-unit-azimuth density\\
+``dropped $2\pi n_s^2$'' & Eq.~(9) & \textbf{retracted}: $\theta_s$ is the external angle (Fig.~2),\\
+& & so the printed Jacobian coefficient is exact\\
 \hline
 \end{tabular}
 \end{center}

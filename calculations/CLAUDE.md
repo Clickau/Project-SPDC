@@ -106,7 +106,10 @@ root or `python plot_fig6.py` from inside `src/`. Run
   chain enters via the shared `PHYS_KW`. Accidentals use the η-scaled
   singles.
 - **`src/spdc_eq9_note.tex`** (built log at `output/spdc_eq9_note.log`) —
-  derivation and write-up of the two Eq.(9) typo corrections (see below).
+  write-up of the paper's angle conventions and errata: Eq.(9) is correct as
+  printed (external angle, per-unit-azimuth); the genuine misprints are in
+  Eq.(7) (see below). Rewritten 2026-07-13, retracting the earlier
+  "2π·ns² typo" claim.
 
 (History: the pre-refactor layout had the physics inside `spdc_fig6.py` and a
 duplicated flux kernel in each detector script. The unified `Ns` was verified
@@ -117,39 +120,48 @@ all scripts re-verified to reproduce the same numbers after the move.)
 
 ## Master equation — Eq.(9), angle-resolved signal flux
 
-As implemented in `spdc_physics.py` (the **corrected** normalisation):
+As implemented in `spdc_physics.py` (`Ns` evaluates the paper's Appendix
+intermediate equation and integrates the signal azimuth over 2π; in the
+paper's variables that is exactly **2π × the printed Eq.(9)**):
 
 ```
-Ns(λs,θs) = 2π·√(2π) · ħ·deff²·ωp·L²·Np / (ε0·ns·ni·np·λs⁵·λi)
+Ns(λs,θs) = 2π · [ 2π·√(2π) · ħ·deff²·ωp·L²·Np / (ε0·ns·ni·np·λs⁵·λi)
             · sin(2θs) · dλs · dθs
-            · ∫dξi  exp(−½(ξs−ξi)²) · sinc²(½·L·Δkz)
+            · ∫dξi  exp(−½(ξs−ξi)²) · sinc²(½·L·Δkz) ]
 ```
 
 - `sinc(x) = sin(x)/x`, so `sinc²` is squared (NumPy's `np.sinc` is
   `sin(πx)/(πx)` — divide the argument by π).
-- ξs = ks·sin(θs)·W, ξi = κi·W (dimensionless transverse momenta);
+- θs is the **external (lab) angle** (paper Fig. 2: θ′s internal, θs external);
+  κs = k0·sin(θs) with k0 = 2π/λs (κ is conserved across the exit face, so
+  this equals ks·sinθ′s with ks = ns·k0).
+- ξs = κs·W, ξi = κi·W (dimensionless transverse momenta);
   W = √(60 µm × 30 µm) ≈ 42.4 µm.
 - Longitudinal mismatch (Appendix form):
-  `Δkz = ks·cos(θs) + √(ki² − (ξi/W)²) − kp`, with `k = 2π·n/λ` for each wave.
+  `Δkz = √(ks² − κs²) + √(ki² − (ξi/W)²) − kp`, with `k = 2π·n/λ` (in-medium)
+  for each wave.
 - Energy conservation → idler: `λi = λs·λp/(λs − λp)`.
 
-### Two independent typos in the paper's printed Eq.(9) — IMPORTANT
+### Paper errata status — re-checked 2026-07-13 (derivation in `spdc_eq9_note.tex`)
 
-The printed Eq.(9) is **~2π·ns² ≈ 17× too low** vs the paper's own Table I /
-Fig. 6 (gives η ≈ 1.6e-11 instead of ≈ 2.7e-10). The corrected form above is
-what reproduces the paper. Both typos are derived in `spdc_eq9_note.tex`:
+**The printed Eq.(9) is CORRECT** — an earlier claim here that it was
+"~2π·ns² ≈ 17× too low" is **retracted**. That claim misread θs as the
+internal angle; Fig. 2 defines θs as external, and the unprimed ks in the
+appendix's "κs = ks·sinθs" is the vacuum wavenumber (the paper primes
+in-medium quantities, `ks' = ns·ωs/c`). With κs = k0·sinθs the Jacobian
+`κs·dκs = ½·k0²·sin2θs·dθs` carries no ns², and the printed prefactor
+`2π·√2π` is exact — as a density **per unit azimuth** (Eq.(9) merely drops
+the dφ symbol; Sec. III.D integrates φ = 0→2π explicitly, which is the outer
+2π in the code's normalisation above). The genuine misprints are confined to
+the main-text Eq.(7):
 
-1. **Factor ~17 (= 2π·ns²):** dropped in the appendix→Eq.(9) substitution
-   κs = ks·sin θs (the κs·dκs angular-Jacobian step). Correct Jacobian
-   `κs·dκs = ½·ks²·sin2θs·dθs` with `ks = 2π·ns/λs`. The printed Eq.(9) keeps
-   the 1/λs² scaling (the λs⁵ in the denominator) but drops the numeric+index
-   coefficient `2π·ns²`. The ns² fingerprint can only come from the in-medium
-   wavenumber ks, so the slip is entirely in this step.
-2. **Factor 4:** Eq.(7)'s prefactor is `2π⁴` in the main text but `8π⁴` in the
-   Appendix. `8π⁴` is correct (gives η = 2.72e-10); `2π⁴` is the misprint. The
-   relabel ∫d²ξ→∫d²ξi is a unit-Jacobian shift and cannot produce the 4.
-   (Minor third typo: Eq.(7) exponent prints `exp(+½ξ²)`; must be `−½ξ²`, as the
-   Appendix has it.)
+1. **Factor 4:** Eq.(7)'s prefactor is `2π⁴` in the main text but `8π⁴` in the
+   Appendix. `8π⁴` is correct — it reproduces Table I's simulated η (2.6e-10;
+   code gives 2.72e-10), the independent closed-form Eq.(8) from ref. [18]
+   (Koch et al. 1995; evaluates to 2.63e-10), and the measured 2.7–2.8e-10.
+   The relabel ∫d²ξ→∫d²ξi is a unit-Jacobian shift and cannot produce the 4.
+2. **Sign:** Eq.(7)'s exponent prints `exp(+½ξ²)`; must be `−½ξ²`, as the
+   Appendix has it.
 
 ## Indices, Sellmeier, constants
 
@@ -161,10 +173,12 @@ what reproduces the paper. Both typos are derived in `spdc_eq9_note.tex`:
 - Constants/params: ħ = 1.054571817e−34 J·s; ε0 = 8.8541878188e−12 F/m;
   c = 2.99792458e8 m/s; deff = 1.75 pm/V; L = 3 mm; λp = 405 nm; Pp = 80 mW ⟹
   Np = Pp/(ħ·ωp) = 1.63e17 /s.
-- **Angle convention:** Eq.(9) internally uses the *internal* angle
-  (κs = ks·sinθ, ks = ns·2π/λs); Fig. 6 plots the *external* (air) angle
-  (κs = k0·sinθ_ext, k0 = 2π/λs). Both give identical total flux — only the
-  y-axis scale differs by ~ns. Use external for figures.
+- **Angle convention:** the paper's Eq.(9) and Fig. 6 both use the *external*
+  (air/lab) angle (κs = k0·sinθ_ext, k0 = 2π/λs; Fig. 2 convention) —
+  `external=True`, the default. `external=False` parametrises the same κs by
+  the *internal* angle (κs = ks·sinθ, ks = ns·2π/λs), an equivalent change of
+  variables. Both give identical total flux — only the y-axis scale of a
+  per-angle plot differs by ~ns. Use external for figures.
 
 ## Sanity checks (must hold)
 

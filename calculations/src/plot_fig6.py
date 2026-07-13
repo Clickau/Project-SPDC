@@ -7,7 +7,7 @@ perfect-phase-matching tuning curve overlaid as a white dashed line
 (as in the paper).  theta_s is the EXTERNAL (air) angle, matching the
 paper's y-axis.
 
-All physics (corrected Eq. 9 flux, Sellmeier, tuning curve) lives in
+All physics (Eq. 9 flux, Sellmeier, tuning curve) lives in
 spdc_physics.py.  Writes spdc_fig6.png.
 
 Note: with our Sellmeier coefficients the collinear-degenerate point

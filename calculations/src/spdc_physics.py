@@ -17,17 +17,30 @@ Table I / Fig. 6 numbers:  python spdc_physics.py
 
 MASTER EQUATION -- Eq. (9), angle-resolved signal flux
 ------------------------------------------------------
-As implemented in Ns() below (the CORRECTED normalisation):
+Ns() below evaluates the paper's Appendix intermediate equation directly:
 
-  Ns(lam_s, th_s) = 2*pi*sqrt(2*pi) * hbar*deff^2*omega_p*L^2*Np
+  dNs = [hbar deff^2 w_s w_i w_p L^2 Np sqrt(2pi) / (8 pi^4 c^3 eps0 ns ni np)]
+        * dw_s * (kappa_s dkappa_s) * dphi * INT dxi_i (...)
+
+changing variables w_s -> lam_s and kappa_s -> theta and integrating the
+signal azimuth phi over 2*pi, with the Jacobians
+
+  |dw_s/dlam_s| = 2 pi c / lam_s^2 ,
+  kappa_s dkappa_s = (k_perp^2/2) sin(2 theta) dtheta .
+
+In the paper's own variables (theta_s = EXTERNAL angle, see below) this equals
+
+  Ns(lam_s, th_s) = 2*pi * [ 2*pi*sqrt(2*pi) * hbar*deff^2*omega_p*L^2*Np
                     / (eps0 * ns*ni*np * lam_s^5 * lam_i)
                     * sin(2 th_s) * dlam * dth
-                    * INT dxi_i  exp(-1/2 (xi_s - xi_i)^2) * sinc^2(1/2 L dkz)
+                    * INT dxi_i exp(-1/2 (xi_s - xi_i)^2) * sinc^2(1/2 L dkz) ]
 
-with sinc(x) = sin(x)/x, the longitudinal phase mismatch (Appendix form)
+i.e. exactly the printed Eq. (9) times the 2*pi azimuth ring, with
+sinc(x) = sin(x)/x, the longitudinal phase mismatch (Appendix form)
 
-  dkz  = ks*cos(th_s) + sqrt(ki^2 - (xi_i/W)^2) - kp ,     k = 2*pi*n/lam ,
-  xi_s = ks*sin(th_s)*W ,   xi_i = kappa_i*W    (dimensionless transverse momenta),
+  dkz  = sqrt(ks^2 - kappa_s^2) + sqrt(ki^2 - (xi_i/W)^2) - kp ,
+  k    = 2*pi*n/lam  (in-medium),   kappa_s = k0*sin(th_s),  k0 = 2*pi/lam_s ,
+  xi_s = kappa_s*W ,   xi_i = kappa_i*W    (dimensionless transverse momenta),
 
 and energy conservation fixing the idler:  lam_i = lam_s*lam_p/(lam_s - lam_p).
 
@@ -35,37 +48,36 @@ Indices: signal/idler ordinary ns = no(lam_s), ni = no(lam_i); pump effective
 extraordinary np = n_eff(theta_m, lam_p) (Eq. 4).
 
 
-TWO INDEPENDENT TYPOS IN THE PAPER'S PRINTED Eq. (9)  --  IMPORTANT
--------------------------------------------------------------------
-The printed Eq. (9) is ~2*pi*ns^2 ~ 17x too LOW compared with the paper's own
-Table I / Fig. 6 (it gives eta ~ 1.6e-11 instead of ~ 2.7e-10).  Both typos are
-derived in spdc_eq9_note.tex; the code below evaluates the Appendix
-intermediate equation directly, which is unambiguous:
-
-  dNs = [hbar deff^2 w_s w_i w_p L^2 Np sqrt(2pi) / (8 pi^4 c^3 eps0 ns ni np)]
-        * dw_s * (kappa_s dkappa_s) * dphi * INT dxi_i (...)
-
-changing variables w_s -> lam_s and kappa_s -> theta and integrating the
-azimuth phi over 2*pi, with the Jacobians
-
-  |dw_s/dlam_s| = 2 pi c / lam_s^2 ,
-  kappa_s dkappa_s = (k^2/2) sin(2 theta) dtheta .
-
-1. Factor ~17 (= 2*pi*ns^2): dropped in the appendix -> Eq.(9) substitution
-   kappa_s = ks sin(theta_s) (the kappa_s*dkappa_s angular-Jacobian step, with
-   the IN-MEDIUM wavenumber ks = 2 pi ns / lam_s).  The printed Eq.(9) keeps
-   the 1/lam_s^2 scaling but drops the numeric+index coefficient 2*pi*ns^2.
-2. Factor 4: Eq.(7)'s prefactor is 2 pi^4 in the main text but 8 pi^4 in the
-   Appendix; 8 pi^4 is correct (gives eta = 2.72e-10).
-   (Minor third typo: Eq.(7) exponent prints exp(+xi^2/2); must be -xi^2/2.)
+PAPER ERRATA STATUS (re-checked 2026-07-13; derivation in spdc_eq9_note.tex)
+----------------------------------------------------------------------------
+The printed Eq. (9) is CORRECT: theta_s is the EXTERNAL (lab) angle -- Fig. 2
+defines theta_s' (internal) vs theta_s (external), and unprimed ks in the
+appendix's "kappa_s = ks sin(theta_s)" is the VACUUM wavenumber (the paper
+primes in-medium quantities: ks' = ns ws/c).  Then kappa_s dkappa_s =
+(k0^2/2) sin(2 th) dth carries no ns^2, and the printed prefactor
+2*pi*sqrt(2*pi) is exact -- as a density per unit azimuth (Eq. 9 merely drops
+the dphi symbol; Sec. III.D integrates phi = 0..2*pi explicitly).  An earlier
+version of this code's docs claimed a "missing 2*pi*ns^2 ~ 17x" typo in
+Eq. (9); that came from misreading theta_s as internal and is RETRACTED.
+The genuine misprints are confined to the main-text Eq. (7):
+1. Factor 4: Eq.(7)'s prefactor is 2 pi^4 in the main text but 8 pi^4 in the
+   Appendix; 8 pi^4 is correct (reproduces Table I's simulated eta ~ 2.6e-10,
+   the independent closed-form Eq. (8) = 2.63e-10, and the measured
+   2.7-2.8e-10; this code gives 2.72e-10).
+2. Sign: Eq.(7)'s exponent prints exp(+xi^2/2); must be -xi^2/2 (as in the
+   Appendix).
 
 
 ANGLE CONVENTION
 ----------------
-Eq. (9) internally uses the INTERNAL angle (kappa_s = ks sin theta, ks = ns k0);
-Fig. 6 plots the EXTERNAL (air) angle (kappa_s = k0 sin theta_ext, k0 = 2pi/lam).
-Both give identical TOTAL flux -- only the y-axis scale differs by ~ns; this is
-checked in sanity_check().  Use external=True (default) for figures.
+The paper's Eq. (9) (and Fig. 6) use the EXTERNAL (air/lab) angle:
+kappa_s = k0 sin theta_ext, k0 = 2pi/lam (Fig. 2 convention; kappa is
+conserved across the exit face, so this equals ks sin theta_int with
+ks = ns k0).  external=True (default) implements exactly that.
+external=False parametrises the same kappa_s by the INTERNAL angle
+(kappa_s = ks sin theta_int) -- an equivalent change of variables whose
+Jacobian carries ns^2.  Both give identical TOTAL flux -- only the y-axis
+scale of a per-angle plot differs by ~ns; this is checked in sanity_check().
 """
 
 import numpy as np
@@ -131,8 +143,9 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
     """Signal photon flux (counts/s) into one (dlam x dtheta) bin, integrated
     over the full 2*pi azimuth of the emission cone.
 
-    Evaluates the Appendix intermediate equation (the corrected Eq. 9
-    normalisation -- see the module docstring for the typo discussion).
+    Evaluates the Appendix intermediate equation (= the printed Eq. 9, which
+    is a per-unit-azimuth density in the external angle, times the 2*pi
+    ring -- see the module docstring for the errata discussion).
 
     The experiment parameters (lam_p, Pp, L, W, deff) can be overridden per
     call; they default to the module-level paper values, so existing callers
@@ -150,9 +163,11 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
     dlam    : wavelength bin width, m.
     dtheta  : polar-angle bin width, rad.
     external: True  -> theta_s is the EXTERNAL (air) angle,
-                       kappa_s = k0 sin(theta_s) with k0 = 2 pi/lam_s  (Fig. 6 axis);
+                       kappa_s = k0 sin(theta_s) with k0 = 2 pi/lam_s
+                       (the paper's Eq. 9 / Fig. 6 convention, per Fig. 2);
               False -> theta_s is the INTERNAL angle,
-                       kappa_s = ks sin(theta_s) with ks = ns k0  (Eq. 9 variable).
+                       kappa_s = ks sin(theta_s) with ks = ns k0
+                       (equivalent change of variables).
               Both give the same total flux; see sanity_check().
     Nxi     : number of points for the xi_i (idler transverse momentum)
               quadrature.
@@ -241,7 +256,7 @@ def Ns(lam_s, theta_s, theta_m, dlam, dtheta, *, external=True,
 
     integral = np.trapezoid(integrand, x=offs, axis=-1)
 
-    # --- prefactor (the corrected normalisation) --------------------------
+    # --- prefactor ---------------------------------------------------------
     # Appendix intermediate equation ("8 pi^4" form), then change variables:
     #   |domega_s/dlam_s| = 2 pi c / lam_s^2
     #   kappa_s dkappa_s  = (k_perp^2 / 2) sin(2 th) dtheta
