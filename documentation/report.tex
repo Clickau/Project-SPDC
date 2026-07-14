@@ -24,6 +24,7 @@ logostyle=flat,
 \usepackage{gensymb}
 \usepackage{braket}
 \usepackage{booktabs}
+\usepackage{multirow}
 
 
 
@@ -67,7 +68,7 @@ logostyle=flat,
 
 This report documents the results of a research project carried out in the Quantum Technology Laboratory of the OTH Regensburg with the aim of optimizing an entangled photon source based on type I spontaneous parametric down-conversion (SPDC) in $\beta$-barium borate (BBO) crystals. Firstly, the theory of the SPDC process and the existing laboratory setup are described, highlighting the problems that need to be addressed. Afterwards, a new setup that aims to improve the photon coincidence rates is proposed and implemented, followed by a computer simulation written in Python that compares the measured photon rates with the ones predicted by the theory. Finally, an experiment to measure the Clauser-Horne-Shimony-Holt (CHSH) inequality is performed.
 
-The results show a 25-fold improvement in the coincidence counts, with a CHSH statistic of $S = 2.36 \pm 0.04$, proving the presence of strong entanglement inside the photon pairs.
+The results show a 25-fold improvement in the coincidence counts, with a CHSH statistic of $S = 2.360 \pm 0.036$, proving the presence of strong entanglement inside the photon pairs.
 
 
 
@@ -404,7 +405,7 @@ To further improve the rates, the 20 mW laser diode was swapped for a 40 mW one 
 
 Taking the initial coincidence rate of less than 5 per second that had previously been obtained (with the bandpass filters) as a reference, this amounts to a 25-fold improvement, with only a factor of 3 being due to increased laser power.
 
-\begin{table}[h]
+\begin{table}[htbp]
   \centering
   \begin{tabular}{lccc}
     \toprule
@@ -438,17 +439,122 @@ The first measurement resulted in a value of $S = 1.96 \pm 0.04$, which does not
     \label{phase_shifted_bell_state}
 \end{equation}
 
-where $\varphi$ is an essentially random phase, determined by unknowable manufacturing tolerances. This is not a Bell state and cannot be used directly in the CHSH inequality.
+where $\varphi$ is an essentially random phase, determined by unknown manufacturing tolerances. This is not a Bell state and cannot be used directly in the CHSH inequality.
 
-The optimal way to fix this issue would be to place a birefringent crystal (like BBO, but cut to a different angle to prevent accidental SPDC) between the half-wave plate and the crystal pair, with the optical axis in the horizontal plane. Since the pump laser is polarized to 45$\degree$, its vertical component would experience a different index of refraction than the horizontal component, thus inducing a phase shift proportional to the crystal thickness. This phase shift could be precisely controlled by tilting the compensation crystal about the vertical axis, thereby changing the length travelled inside the crystal, and would allow for creating a perfect Bell state with the maximum count rates.
+The optimal way to fix this issue would be to place a birefringent crystal (like BBO, but cut to a different angle to prevent accidental SPDC) between the half-wave plate and the crystal pair, with the optical axis in the horizontal plane. Since the pump laser is polarized to 45$\degree$, its vertical component would experience a different index of refraction than the horizontal component, thus inducing a phase shift proportional to the crystal thickness. This phase shift could be precisely controlled by tilting the compensation crystal about the vertical axis, thereby changing the length travelled inside the crystal, and would allow for creating a maximally entangled with the optimal count rates.
+
+Due to time pressure, a temporary workaround was implemented instead of the ideal solution, resulting in a proper Bell state at the expense of a portion of the count rate. As explained above, the phase difference is caused by thickness of the crystals. Tilting the crystals about either horizontal or vertical axis has the additional effect (beyond altering the phase-matching condition) of changing the length travelled by photons inside the crystal, and thus the phase difference. One can thus control $\varphi$ by only tilting the crystal, while also losing a portion of the coincidence counts due to imperfect phase-matching. 
+
+To perform this adjustment, the polarizers were set to 45$\degree$ and 135$\degree$, respectively and the coincidence counts were measured. This amounts to the projection operator $\ket{+-}\bra{+-}$, where $\{\ket{+} = \frac{1}{\sqrt{2}} \bigl( \ket{H} + \ket{V} \bigr), \ket{-} = \frac{1}{\sqrt{2}} \bigl( \ket{H} - \ket{V} \bigr)\}$ is the diagonal basis. The amplitude is:
+
+\begin{equation}
+    \begin{split}
+        \braket{+-|\psi}
+        &= \frac{1}{\sqrt{2}} \bigl( \bra{+} \otimes \bra{-} \bigr)
+        \bigl( \ket{HH} + e^{i\varphi} \ket{VV} \bigr) \\
+        &= \frac{1}{\sqrt{2}} \Bigl(
+            \braket{+|H}\braket{-|H}
+            + e^{i\varphi} \braket{+|V}\braket{-|V}
+        \Bigr) \\
+        &= \frac{1}{\sqrt{2}} \left( \frac{1}{2} - \frac{1}{2} e^{i\varphi} \right)
+        = \frac{1 - e^{i\varphi}}{2\sqrt{2}}
+    \end{split}
+    \label{projection_pm_amplitude}
+\end{equation}
+
+The probability amplitude of this measurement is:
+
+\begin{equation}
+    \begin{split}
+        P(+,-) = \left| \braket{+-|\psi} \right|^{2}
+            &= \frac{1}{8} \left| 1 - e^{i\varphi} \right|^{2} \\
+            &= \frac{1}{8} \bigl( 1 - e^{i\varphi} \bigr)\bigl( 1 - e^{-i\varphi} \bigr) \\
+            &= \frac{1}{8} \bigl( 2 - e^{i\varphi} - e^{-i\varphi} \bigr) \\
+            &= \frac{1}{8} \bigl( 2 - 2\cos\varphi \bigr)
+            = \frac{1 - \cos\varphi}{4} \\
+            &= \frac{1}{2} \sin^{2}\!\left( \frac{\varphi}{2} \right)
+    \end{split}
+    \label{projection_pm_probability}
+\end{equation}
+
+This means that creating a Bell state with $\varphi = 0$ is equivalent to minimizing the coincidence counts for the polarizer angles 45$\degree$, 135$\degree$ (the counts did not drop to 0 due to polarizer leakage). This was performed by only tilting the crystal pair about its horizontal axis, which had the unwanted side-effect of decreasing the down-conversion rate in only one of the crystals, causing an imbalance between the coincidences measured in the $\ket{HH}$ (with both polarizers set to 0$\degree$) and $\ket{VV}$ (with both polarizers set to 90$\degree$) states. This has been compensated for by setting the half-wave plate to 20$\degree$, restoring the balance between the two crystals. The measurement results in the rectilinear and diagonal bases are shown in Table \ref{tab:bases_measurements}.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{l c c r}
+    \toprule
+    State & $\theta_1$ & $\theta_2$ & $N$ (counts) \\
+    \midrule
+    $\ket{HH}$ & $0^\circ$  & $0^\circ$  & 816 \\
+    $\ket{HV}$ & $0^\circ$  & $90^\circ$ &  78 \\
+    $\ket{VH}$ & $90^\circ$ & $0^\circ$  &  68 \\
+    $\ket{VV}$ & $90^\circ$ & $90^\circ$ & 963 \\
+    \midrule
+    $\ket{++}$ & $45^\circ$  & $45^\circ$  & 912 \\
+    $\ket{+-}$ & $45^\circ$  & $135^\circ$ &  93 \\
+    $\ket{-+}$ & $135^\circ$ & $45^\circ$  &  75 \\
+    $\ket{--}$ & $135^\circ$ & $135^\circ$ & 878 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Coincidence counts after phase adjustment measured with polarizer angles $\theta_1$, $\theta_2$ in the rectilinear and diagonal bases, integration time 30 s, coincidence window 20 ns}
+  \label{tab:bases_measurements}
+\end{table}
 
 
-explain improvisation, measurements in pm basis etc - maybe actually try the real fix in the lab
+Finally, the CHSH measurement can be performed again with $\alpha = 0^\circ$, $\alpha' = 45^\circ$ on polariser 2 and $\beta = 22.5^\circ$, $\beta' = 67.5^\circ$ on polariser 1 and using equations \eqref{CHSH}, \eqref{CHSH_correlation}, \eqref{CHSH_std_deviation}, \eqref{CHSH_correlation_std_deviation}. The results are shown in Table \ref{tab:chsh}, where $C$ denotes the coincidence counts of a single setting and $N$ the sum over the four settings belonging to one correlation coefficient. The final result is $S = 2.360 \pm 0.036$, a $9.9 \sigma$ violation of Bell's inequality.
+
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{l c l c r r c}
+    \toprule
+    \multicolumn{2}{c}{Polariser 2} & \multicolumn{2}{c}{Polariser 1}
+      & & & \\
+    \cmidrule(lr){1-2} \cmidrule(lr){3-4}
+    Setting & Angle & Setting & Angle & $C$ & $N$ & $E \pm \Delta E$ \\
+    \midrule
+    $\alpha$       & $0^\circ$  & $\beta$       & $22.5^\circ$  & 593
+      & \multirow{4}{*}{1869} & \multirow{4}{*}{$\phantom{-}0.456 \pm 0.021$} \\
+    $\alpha$       & $0^\circ$  & $\beta_\perp$ & $112.5^\circ$ & 240 & & \\
+    $\alpha_\perp$ & $90^\circ$ & $\beta$       & $22.5^\circ$  & 268 & & \\
+    $\alpha_\perp$ & $90^\circ$ & $\beta_\perp$ & $112.5^\circ$ & 768 & & \\
+    \midrule
+    $\alpha'$       & $45^\circ$  & $\beta$       & $22.5^\circ$  & 826
+      & \multirow{4}{*}{1982} & \multirow{4}{*}{$\phantom{-}0.692 \pm 0.016$} \\
+    $\alpha'$       & $45^\circ$  & $\beta_\perp$ & $112.5^\circ$ & 169 & & \\
+    $\alpha'_\perp$ & $135^\circ$ & $\beta$       & $22.5^\circ$  & 136 & & \\
+    $\alpha'_\perp$ & $135^\circ$ & $\beta_\perp$ & $112.5^\circ$ & 851 & & \\
+    \midrule
+    $\alpha$       & $0^\circ$  & $\beta'$       & $67.5^\circ$  & 132
+      & \multirow{4}{*}{1899} & \multirow{4}{*}{$-0.727 \pm 0.016$} \\
+    $\alpha$       & $0^\circ$  & $\beta'_\perp$ & $157.5^\circ$ & 716 & & \\
+    $\alpha_\perp$ & $90^\circ$ & $\beta'$       & $67.5^\circ$  & 924 & & \\
+    $\alpha_\perp$ & $90^\circ$ & $\beta'_\perp$ & $157.5^\circ$ & 127 & & \\
+    \midrule
+    $\alpha'$       & $45^\circ$  & $\beta'$       & $67.5^\circ$  & 786
+      & \multirow{4}{*}{1970} & \multirow{4}{*}{$\phantom{-}0.484 \pm 0.020$} \\
+    $\alpha'$       & $45^\circ$  & $\beta'_\perp$ & $157.5^\circ$ & 227 & & \\
+    $\alpha'_\perp$ & $135^\circ$ & $\beta'$       & $67.5^\circ$  & 281 & & \\
+    $\alpha'_\perp$ & $135^\circ$ & $\beta'_\perp$ & $157.5^\circ$ & 676 & & \\
+    \midrule
+    \multicolumn{6}{r}{$S = E(\alpha,\beta) + E(\alpha',\beta)
+                            - E(\alpha,\beta') + E(\alpha',\beta')$}
+      & $\phantom{-}2.360 \pm 0.036$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Results of the CHSH measurement on the Bell state, integration time 30 s, coincidence window 20 ns}
+  \label{tab:chsh}
+\end{table}
 
 
 
 
-magnetic mounts, half wave plate theory, pics of setup, calculation, theory chsh angles for maximum violation
+explain improvisation, measurements in pm basis etc - maybe actually try the real fix in the lab; maybe try the other polarizers, small angle calibration issue??
+
+
+
+
+magnetic mounts, half wave plate theory, pics of setup, calculation, theory chsh angles for maximum violation, broad peaks for phase matching measured in practice, dichroic film polarizers?, sigma violation theory
 
 
 
