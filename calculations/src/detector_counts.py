@@ -235,9 +235,8 @@ def main():
                f"{FILTER_FWHM*1e9:.0f} nm FWHM @ {center*1e9:.0f} nm"),
         subtitle=(f"cut at ideal angle $\\theta_m$ = {cut:.2f}$^\\circ$ for "
                   f"{THETA_S_DEG:.0f}$^\\circ$; circular-aperture azimuthal "
-                  f"arc included (ring fraction "
-                  f"{2*r/(2*np.pi*D*np.tan(np.radians(THETA_S_DEG))):.1%} at centre)"),
-        a2t=a2t, t2a=t2a)
+                  f"arc included"),
+        a2t=a2t, t2a=t2a, subtitle_va="top")
     ax.title.set_fontsize(10)            # long parameter line; keep it inside
     fig.tight_layout()
     fig.savefig(OUTFILE, dpi=200)

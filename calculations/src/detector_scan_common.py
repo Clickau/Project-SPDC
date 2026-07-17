@@ -90,9 +90,11 @@ def summarize(header, alphas, tms_deg, data, unit="/s"):
     return ipk, thresh
 
 
-def draw_panel(ax, alphas, data, ipk, thresh, ylabel, title, subtitle, a2t, t2a):
+def draw_panel(ax, alphas, data, ipk, thresh, ylabel, title, subtitle, a2t, t2a,
+               subtitle_va="bottom"):
     """Standard scan panel: semilog count vs alpha, dashed line at the peak,
-    dotted line at the 2-orders-down threshold, secondary theta_m axis on top."""
+    dotted line at the 2-orders-down threshold, secondary theta_m axis on top.
+    subtitle_va="top" moves the gray annotation to the top of the axes box."""
     ax.semilogy(alphas, data, color="C0", lw=1.6)
     ax.axhline(thresh, color="0.5", ls=":", lw=1)
     ax.axvline(alphas[ipk], color="C3", ls="--", lw=1)
@@ -100,8 +102,9 @@ def draw_panel(ax, alphas, data, ipk, thresh, ylabel, title, subtitle, a2t, t2a)
     ax.grid(True, which="both", alpha=0.25)
     ax.set_xlabel(r"crystal rotation angle $\alpha$ (deg, 0 = normal incidence)")
     ax.set_title(title, pad=26)
-    ax.text(0.5, 0.02, subtitle, transform=ax.transAxes, ha="center",
-            va="bottom", fontsize=7.5, color="0.35")
+    sub_y = 0.98 if subtitle_va == "top" else 0.02
+    ax.text(0.5, sub_y, subtitle, transform=ax.transAxes, ha="center",
+            va=subtitle_va, fontsize=7.5, color="0.35")
     ax.set_ylim(data.max() / 3e3, data.max() * 2)
     sec = ax.secondary_xaxis("top", functions=(a2t, t2a))
     sec.set_xlabel(r"internal phase-matching angle $\theta_m$ (deg)")
