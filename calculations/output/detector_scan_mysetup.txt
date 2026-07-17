@@ -1,0 +1,16 @@
+--- Setup ---
+  indices: Sellmeier ref 1: Kato 1986
+  pump 405 nm, 40 mW, W = 1.0 mm (1/e^2 radius);  BBO L = 0.10 mm, deff = 1.75 pm/V
+  detector: theta_s = 3.00 deg, D = 625 mm, opening 6 mm  (polar acceptance 9.6 mrad, ring fraction 0.029)
+  filter: Gaussian 10 nm FWHM at 810.0 nm
+  ideal cut angle theta_m = 29.237 deg (degenerate cone through 3.0 deg at normal incidence)
+--- Efficiencies ---
+  pump chain (2x F01 mirror, HWP, crystal face): ETA_PUMP = 0.846  ->  33.8 mW at the crystal
+  collection chain (crystal face, P01 mirror, filter peak, fiber coupling, fiber, APD): ETA_COLLECT = 0.226
+--- Result (crystal at normal incidence) ---
+  photons on ONE detector : 1.235e+03 /s
+  full azimuthal ring     : 5.401e+04 /s (aperture/ring = 0.0229)
+=== my setup: 10 nm FWHM bandpass, one detector ===
+  peak at alpha=+0.00 deg (thetam=29.24), value=1.23e+03/s
+  2 orders down at alpha = -3.17 and +3.06 deg (rotate -3.17 / +3.06 from peak)
+wrote C:\Users\cosmi\Desktop\project-spdc\calculations\output\detector_scan_mysetup.png

@@ -222,6 +222,7 @@ def main():
     s_check = eta_a * coincidence_rate(cut, lam, w_a, dlam, geom_open)
 
     print("--- Two-detector setup (arms at +/-%.2f deg) ---" % ARM_A["theta_deg"])
+    print(f"  indices: {phys.sellmeier_label()}")
     print(f"  pump {LAM_P*1e9:.0f} nm, {dc.PP*1e3:.0f} mW, W = {dc.W_PUMP*1e3:.1f} mm; "
           f"BBO L = {dc.L_CRY*1e3:.2f} mm; ideal cut theta_m = {cut:.3f} deg")
     for name, arm in (("A", ARM_A), ("B", ARM_B)):
@@ -295,4 +296,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from textlog import tee_stdout
+    with tee_stdout("coincidence_scan.txt"):
+        main()

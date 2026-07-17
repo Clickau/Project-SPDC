@@ -89,4 +89,7 @@ def run(theta_det_deg=3.0, dth_det=2e-3, theta_m_cut=None,
 
 
 if __name__ == "__main__":
-    run()
+    from textlog import tee_stdout
+    with tee_stdout("detector_scan.txt"):
+        print(f"indices: {com.phys.sellmeier_label()}")
+        run()

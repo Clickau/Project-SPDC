@@ -106,18 +106,62 @@ Np      = Pp / (hbar * omega_p)  # pump photon flux, /s (paper Fig. 6: 1.63e17)
 
 # ----------------------------------------------------------------------------
 # BBO refractive indices -- Sellmeier equations (lambda in MICROMETRES inside)
+#
+# Two selectable coefficient sets ("references"):
+#   ref 1, "kato"   -- Kato 1986 (IEEE JQE 22, 1013).  DEFAULT.  More accurate
+#                      at 405/810 nm: agrees with the modern measurement
+#                      (Tamosauskas et al. 2018, Opt. Mater. Express 8, 1410)
+#                      to ~1-2e-4 there, vs 5-10e-4 for Eimerl.
+#   ref 2, "eimerl" -- Eimerl et al. 1987 (J. Appl. Phys. 62, 1968).  What the
+#                      paper used, via the NIST noncollinear phase-matching
+#                      program (paper refs [17]/[25]); select it to reproduce
+#                      the paper's figures/labels (Fig. 6) exactly.
+# n^2 = A + B/(lam^2 - C) - D*lam^2, lam in um.
 # ----------------------------------------------------------------------------
+SELLMEIER_REFS = {
+    "kato":   {"no": (2.7359, 0.01878, 0.01822, 0.01354),
+               "ne": (2.3753, 0.01224, 0.01667, 0.01516),
+               "label": "Sellmeier ref 1: Kato 1986"},
+    "eimerl": {"no": (2.7405, 0.0184, 0.0179, 0.0155),
+               "ne": (2.3730, 0.0128, 0.0156, 0.0044),
+               "label": "Sellmeier ref 2: Eimerl 1987 (paper/NIST)"},
+}
+_SELLMEIER_ALIASES = {"kato": "kato", "eimerl": "eimerl", 1: "kato", 2: "eimerl",
+                      "1": "kato", "2": "eimerl"}
+_sellmeier = "kato"
+
+
+def use_sellmeier(ref):
+    """Select the Sellmeier coefficient set: 1/"kato" (default) or
+    2/"eimerl" (the paper's).  Returns the human-readable label."""
+    global _sellmeier
+    key = _SELLMEIER_ALIASES.get(ref if isinstance(ref, int) else str(ref).lower())
+    if key is None:
+        raise ValueError(f"unknown Sellmeier ref {ref!r}; use 1/'kato' or 2/'eimerl'")
+    _sellmeier = key
+    return sellmeier_label()
+
+
+def sellmeier_label():
+    """Label of the active Sellmeier set (for printing into script outputs)."""
+    return SELLMEIER_REFS[_sellmeier]["label"]
+
+
+def _sellmeier_n(lam, coeffs):
+    l2 = (lam * 1e6) ** 2
+    A, B, C, D = coeffs
+    return np.sqrt(A + B / (l2 - C) - D * l2)
+
+
 def n_o(lam):
-    """Ordinary index of BBO.  lam in metres."""
-    l = lam * 1e6
-    return np.sqrt(2.7359 + 0.01878 / (l**2 - 0.01822) - 0.01354 * l**2)
+    """Ordinary index of BBO (active Sellmeier set).  lam in metres."""
+    return _sellmeier_n(lam, SELLMEIER_REFS[_sellmeier]["no"])
 
 
 def n_e_principal(lam):
     """Principal extraordinary index of BBO (propagation at 90 deg to the
-    optic axis).  lam in metres."""
-    l = lam * 1e6
-    return np.sqrt(2.3753 + 0.01224 / (l**2 - 0.01667) - 0.01516 * l**2)
+    optic axis, active Sellmeier set).  lam in metres."""
+    return _sellmeier_n(lam, SELLMEIER_REFS[_sellmeier]["ne"])
 
 
 def n_eff(lam, theta_m):
@@ -362,6 +406,7 @@ def sanity_check():
     Ns_int = total(external=False, th_max_deg=7.5)    # internal angle (Eq. 9 variable)
 
     print("--- Sanity check (theta_m = 29.12 deg, Pp = 80 mW) ---")
+    print(f"  indices          : {sellmeier_label()}")
     print(f"  Np               = {Np:.3e} /s   (paper: 1.63e17)")
     print(f"  n_o(810 nm)      = {n_o(810e-9):.4f}   (paper: ~1.66)")
     print(f"  n_eff(405, th_m) = {n_eff(lam_p, theta_m):.4f} (paper Table I: ~1.660)")
@@ -372,4 +417,6 @@ def sanity_check():
 
 
 if __name__ == "__main__":
-    sanity_check()
+    from textlog import tee_stdout
+    with tee_stdout("sanity_check.txt"):
+        sanity_check()

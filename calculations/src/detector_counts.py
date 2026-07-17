@@ -187,6 +187,7 @@ def main():
 
     r, D = APERTURE / 2, DIST_DET
     print("--- Setup ---")
+    print(f"  indices: {phys.sellmeier_label()}")
     print(f"  pump {LAM_P*1e9:.0f} nm, {PP*1e3:.0f} mW, W = {W_PUMP*1e3:.1f} mm"
           f" (1/e^2 radius);  BBO L = {L_CRY*1e3:.2f} mm, deff = {DEFF*1e12:.2f} pm/V")
     print(f"  detector: theta_s = {THETA_S_DEG:.2f} deg, D = {D*1e3:.0f} mm, "
@@ -244,4 +245,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from textlog import tee_stdout
+    with tee_stdout("detector_scan_mysetup.txt"):
+        main()

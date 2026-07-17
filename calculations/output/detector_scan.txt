@@ -1,0 +1,9 @@
+indices: Sellmeier ref 1: Kato 1986
+Crystal cut at theta_m_cut = 29.22 deg (= optimal, so alpha=0 is the peak)
+=== BROADBAND (all wavelengths, idler<3500nm) ===
+  peak at alpha=+0.00 deg (thetam=29.22), value=8.63e+08/s
+  2 orders down at alpha = -7.48 and +0.44 deg (rotate -7.48 / +0.44 from peak)
+=== NARROWBAND (805-815 nm, e.g. with a bandpass filter) ===
+  peak at alpha=+0.03 deg (thetam=29.24), value=7.19e+07/s
+  2 orders down at alpha = -0.29 and +0.34 deg (rotate -0.32 / +0.31 from peak)
+saved C:\Users\cosmi\Desktop\project-spdc\calculations\output\detector_scan.png

@@ -8,12 +8,17 @@ perfect-phase-matching tuning curve overlaid as a white dashed line
 paper's y-axis.
 
 All physics (Eq. 9 flux, Sellmeier, tuning curve) lives in
-spdc_physics.py.  Writes spdc_fig6.png.
+spdc_physics.py.  Writes TWO variants:
 
-Note: with our Sellmeier coefficients the collinear-degenerate point
-(810 nm at theta_s = 0) lands at theta_m ~ 28.82 deg vs the paper's 28.6 deg
-(the paper used a NIST index program) -- a ~0.2 deg label offset; the physics
-is unchanged.
+  spdc_fig6.png      -- Eimerl 1987 indices (Sellmeier ref 2), the set the
+                        paper used via the NIST program; matches the paper's
+                        panels/labels exactly (e.g. 28.6 deg collinear pair
+                        at ~750/875 nm).
+  spdc_fig6_kato.png -- Kato 1986 indices (Sellmeier ref 1, the library
+                        default; more accurate at 405/810 nm).  Collinear
+                        degeneracy sits at theta_m ~ 28.82 deg vs Eimerl's
+                        28.67 deg, so the same theta_m labels give visibly
+                        different maps near degeneracy.
 """
 
 from pathlib import Path
@@ -62,18 +67,26 @@ def make_figure(lam_min=430e-9, lam_max=1000e-9, dlam=1e-9,
 
         ax.set_ylabel(r"$\theta_s$ (deg)")
         ax.set_ylim(-th_max_deg, th_max_deg)
-        ax.text(0.02, 0.86, rf"$\theta_m = {tm_deg:.1f}^\circ$",
-                transform=ax.transAxes, color="white", fontsize=11)
+        ax.set_title(rf"$\theta_m = {tm_deg:.1f}^\circ$",
+                     loc="left", fontsize=11)
         fig.colorbar(pcm, ax=ax, pad=0.01, label="counts/s")
 
     axes[-1].set_xlabel(r"$\lambda_s$ (nm)")
-    fig.suptitle("Recreated Fig. 6(e)-(h): SPDC flux $N_s(\\lambda_s,\\theta_s)$ in BBO",
-                 fontsize=12)
+    fig.suptitle("Recreated Fig. 6(e)-(h): SPDC flux $N_s(\\lambda_s,\\theta_s)$ in BBO"
+                 f"\n[{phys.sellmeier_label()}]", fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.98])
     fig.savefig(fname, dpi=140)
-    print(f"saved {fname}")
+    print(f"saved {fname}   [{phys.sellmeier_label()}]")
 
 
 if __name__ == "__main__":
-    phys.sanity_check()
-    make_figure()
+    from textlog import tee_stdout
+    with tee_stdout("spdc_fig6.txt"):
+        phys.sanity_check()
+        # Main figure with the paper's indices (Eimerl, ref 2) so it matches
+        # the published panels; second variant with the more accurate default
+        # set (Kato, ref 1) for comparison.
+        phys.use_sellmeier("eimerl")
+        make_figure()
+        phys.use_sellmeier("kato")
+        make_figure(fname=OUTDIR / "spdc_fig6_kato.png")

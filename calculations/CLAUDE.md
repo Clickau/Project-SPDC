@@ -24,9 +24,19 @@ root or `python plot_fig6.py` from inside `src/`. Run
 
 ## Files
 
+- **`src/textlog.py`** — `tee_stdout(filename)` context manager (no physics):
+  every runnable script wraps its `__main__` body in it, so the printed
+  summary (rates, angles, sanity numbers) is ALSO written to a txt in
+  `output/`, named after the script's figure: `sanity_check.txt`
+  (spdc_physics), `spdc_fig6.txt`, `detector_scan.txt`,
+  `detector_scan_bandpass.txt`, `detector_scan_mysetup.txt`
+  (detector_counts), `coincidence_scan.txt` (coincidence_counts).
+  Added 2026-07-16; figures/raw arrays are deliberately not duplicated there.
 - **`src/spdc_physics.py`** — the physics library; all constants and physics
   live here, the plot scripts contain none. Defines the SI constants, experiment
-  parameters, BBO Sellmeier (`n_o`, `n_e_principal`, `n_eff`), `sinc`, `Np`,
+  parameters, the two selectable BBO Sellmeier sets (`SELLMEIER_REFS`,
+  `use_sellmeier`, `sellmeier_label`, `n_o`, `n_e_principal`, `n_eff`;
+  see "Indices" section — default Kato, ref 2 Eimerl = the paper's), `sinc`, `Np`,
   the unified flux `Ns(lam_s, theta_s, ...)` (numpy-broadcasts λs against θs,
   so one function serves both the Fig. 6 maps and the detector scans; keyword
   options: `external` angle convention, `Nxi` quadrature points, `lam_i_max`
@@ -44,9 +54,12 @@ root or `python plot_fig6.py` from inside `src/`. Run
   `spectra_vs_thetam` (the θm × λ count matrix every panel derives from),
   `rotation_axes` (α axis + θm secondary-axis interpolators),
   `two_order_crossings`, `summarize`, `draw_panel`.
-- **`src/plot_fig6.py`** — Fig. 6 recreation. Writes `output/spdc_fig6.png`:
-  the four stacked log-scale λs–θs maps Fig. 6(e)–(h) with white-dashed
-  perfect-phase-matching tuning curves. Also runs the sanity check first.
+- **`src/plot_fig6.py`** — Fig. 6 recreation: the four stacked log-scale
+  λs–θs maps Fig. 6(e)–(h) with white-dashed perfect-phase-matching tuning
+  curves. Runs the sanity check first, then writes TWO variants (Sellmeier
+  set stamped in the suptitle): `output/spdc_fig6.png` with Eimerl (ref 2,
+  the paper's indices — matches the published panels exactly) and
+  `output/spdc_fig6_kato.png` with the default Kato (ref 1).
 - **`src/plot_detector_scan.py`** — fixed detector at external angle θs = 3°,
   rotate the crystal, plot wavelength-integrated count vs crystal rotation
   angle α. Two panels: broadband + hard 805–815 nm top-hat. Writes
@@ -167,9 +180,20 @@ the main-text Eq.(7):
 
 - Signal & idler ordinary: `ns = no(λs)`, `ni = no(λi)`. Pump effective
   extraordinary (Eq. 4): `np = n_eff(θm,λp) = [cos²θm/no² + sin²θm/ne²]^(−½)`.
-- BBO Sellmeier (λ in µm):
-  - `no² = 2.7359 + 0.01878/(λ²−0.01822) − 0.01354·λ²`
-  - `ne² = 2.3753 + 0.01224/(λ²−0.01667) − 0.01516·λ²`
+- BBO Sellmeier (λ in µm) — TWO selectable sets in `SELLMEIER_REFS`
+  (`use_sellmeier(1/"kato" | 2/"eimerl")`, added 2026-07-17; every script
+  prints the active set via `sellmeier_label()` into its teed txt):
+  - **ref 1 "kato" (DEFAULT — used everywhere except the paper-matching
+    Fig. 6)**: Kato 1986, `no² = 2.7359 + 0.01878/(λ²−0.01822) − 0.01354·λ²`,
+    `ne² = 2.3753 + 0.01224/(λ²−0.01667) − 0.01516·λ²`. More accurate: agrees
+    with Tamošauskas 2018 (Opt. Mater. Express 8, 1410 — the modern
+    0.188–5.2 µm measurement) to ~1–2e−4 at 405/810 nm.
+  - **ref 2 "eimerl"**: Eimerl 1987, `no² = 2.7405 + 0.0184/(λ²−0.0179)
+    − 0.0155·λ²`, `ne² = 2.3730 + 0.0128/(λ²−0.0156) − 0.0044·λ²`. This is
+    what the PAPER used (via the NIST phase-matching program, its refs
+    [17]/[25]; confirmed against NIST Fortran source and Table I's np =
+    1.6612 = n_eff(405, 28.6°) to 5 digits). 5–10e−4 off Tamošauskas at
+    405/810 nm — select it only to reproduce the paper's figures/labels.
 - Constants/params: ħ = 1.054571817e−34 J·s; ε0 = 8.8541878188e−12 F/m;
   c = 2.99792458e8 m/s; deff = 1.75 pm/V; L = 3 mm; λp = 405 nm; Pp = 80 mW ⟹
   Np = Pp/(ħ·ωp) = 1.63e17 /s.
@@ -186,9 +210,12 @@ the main-text Eq.(7):
 - Total degenerate flux 2Ns ≈ 4.2e7 /s at Pp = 80 mW (code gives 4.44e7).
 - Fig. 6 phase-matching angles θm = 28.6°, 28.8°, 29.1°, 29.4°;
   λs ≈ 430–1000 nm, θs ≈ −6°…+6°, color on log scale.
-- Note: collinear-degenerate (810 nm at θ=0) lands at θm ≈ 28.82° with this
-  Sellmeier vs the paper's 28.6° (paper used a NIST index program) — a ~0.2°
-  label offset; the physics is correct.
+- Note: collinear-degenerate (810 nm at θ=0) lands at θm ≈ 28.82° with Kato
+  (ref 1) vs 28.67° with Eimerl (ref 2, the paper's set; Tamošauskas 2018
+  gives 28.85°). The paper's θm labels carry Eimerl's ~0.18° error — with
+  Eimerl selected, the 28.6° panel's θs=0 pair is 754/875 nm (matches the
+  paper's Fig. 6(e)); with Kato it is 718/929 nm. Resolved 2026-07-17
+  (previously described here as an unexplained "~0.2° label offset").
 
 ## Detector-scan analysis — key physical findings
 

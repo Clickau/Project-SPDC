@@ -1,0 +1,10 @@
+--- Sanity check (theta_m = 29.12 deg, Pp = 80 mW) ---
+  indices          : Sellmeier ref 1: Kato 1986
+  Np               = 1.631e+17 /s   (paper: 1.63e17)
+  n_o(810 nm)      = 1.6603   (paper: ~1.66)
+  n_eff(405, th_m) = 1.6597 (paper Table I: ~1.660)
+  2*Ns (external)  = 4.444e+07 /s   (paper: ~4.2e7)
+  2*Ns (internal)  = 4.444e+07 /s   (should match external)
+  eta = 2Ns/Np     = 2.724e-10        (paper: ~2.6-2.7e-10)
+saved C:\Users\cosmi\Desktop\project-spdc\calculations\output\spdc_fig6.png   [Sellmeier ref 2: Eimerl 1987 (paper/NIST)]
+saved C:\Users\cosmi\Desktop\project-spdc\calculations\output\spdc_fig6_kato.png   [Sellmeier ref 1: Kato 1986]
