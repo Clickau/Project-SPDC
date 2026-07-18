@@ -504,7 +504,7 @@ Taking the initial coincidence rate of less than 5 per second that had previousl
 
 
 
-\subsubsection{Issues with phase compensation}
+\subsubsection{Issues with phase compensation} \label{ssec:phase_compensation}
 
 To compute the CHSH parameter, a polarizer was placed in front of each detector fiber coupler and the coincidence counts were recorded for each of the 16 angle pairs that produce maximum violation, integrating the rates over 30 seconds for better accuracy. Then $S$ and $\Delta S$ were computed using equations \eqref{CHSH}, \eqref{CHSH_correlation}, \eqref{CHSH_std_deviation}, \eqref{CHSH_correlation_std_deviation}.
 
@@ -659,7 +659,7 @@ A quantitative assessment of the effect of crystal tilt on the expected detector
 \begin{itemize}
     \item Pump wavelength: LAM\_P = 405 nm
     \item Laser output power: P\_P = 40 mW
-    \item Pump intensity radius: W\_PUMP = 1 mm
+    \item Pump intensity radius: W\_PUMP = 1 mm (collimated)
     \item BBO crystal thickness: L\_CRY = 0.1 mm
     \item Effective nonlinearity of crystal: D\_EFF = 1.75 pm/V \cite{spdc-intensity}
     \item Detector lab angle: THETA\_S = 3$\degree$
@@ -673,7 +673,7 @@ A quantitative assessment of the effect of crystal tilt on the expected detector
     \item Number of F01 mirrors: N\_MIRROR\_F01 = 2
     \item P01 mirror reflectance at 810 nm: ETA\_MIRROR\_P01 = 0.958 \cite{thorlabs_mirrors_data}
     \item Bandpass peak transmission: T\_FILTER\_PEAK = 0.983 \cite{thorlabs_filter_data}
-    \item Fiber coupling efficiency: ETA\_FIBER\_COUPLING = 0.8
+    \item Fiber coupling efficiency: ETA\_FIBER\_COUPLING = 0.8 (assumes 15\% loss coupling from the lens into the fiber core, 3.5\% Fresnel loss at the fiber input, 5\% loss at the mating with the detector box)
     \item APD detector efficiency at 810 nm: ETA\_APD = 0.30 \cite{qutools_apd_data}
 \end{itemize}
 
@@ -709,17 +709,31 @@ The final step is to compute the actual expected coincidence counts for two dete
 \end{table}
 
 
+\subsection{Interpreting the results}
 
-\section{Conclusion}
+Table \ref{tab:counts_computation} shows that the measured coincidence rate is 35\% lower than the optimal rate predicted by the theoretical model described above.
+
+One possible cause for this difference is a limitation of the theoretical model, which assumes that all photons reaching the aperture of the fiber couplers get transported onto the fiber (with 80\% efficiency). This does not take into account the collection modes and angular acceptances of the collimators. One consequence of this is the fact that a focused pump beam results in lower coincidences in the simulation, which contradicts the empirical data (this is the reason why the simulation uses a collimated pump beam). Modifying the computation to properly consider these effects is possible, but beyond the scope of this project.
+
+Another possible reason for the discrepency is inaccuracy of the parameters used for the simulation. They are all nominal values taken from the component datasheets, and have not been actually measured. The pump laser power is especially likely to be different than the nominal value, as the laser is driven with constant current, without using the integrated photodiode for power regulation.
+
+Finally, imperfect alignment could also explain the lower coincidence rates. However, due to the measured counts being only 35\% lower than the theoretical maximum, it is unlikely that improving alignment could result in significantly better rates.
 
 
 
 
 
-mention detectors being positioned optimally because of crystal turning making no difference?, generate readme, conclusions
+\section{Conclusion and further improvements}
 
+This project was a success in vastly improving the down-conversion rates of the source, while also proving the presence of the maximally entangled Bell state, which defies all local realistic theories. The source in its current state can already be used to perform educational physics experiments with entangled photons.
 
-computation beam not focused; focusing pump increases coincidences instead of decreasing - wrong model need finite-etendue collection model beyond scope of project and that's why beam radius 1mm
+A top priority should be the procurement and installation of a quarter-wave plate between the half-wave plate and the crystal, which would allow for precise control over the phase $\varphi$, as described in section \ref{ssec:phase_compensation}. With this modification, a CHSH violation could be measured without sacrificing half the count rate.
+
+It has also been observed that the rates can vary by up to 10\% from one day to the next, without any change in the setup. This could point to temperature variations affecting the setup mechanically or the laser diode power and warrants further investigation. Measuring the actual laser power and setting it to operate in constant-power mode might mitigate this effect.
+
+The most obvious way to improve the coincidence rate further is to use a more powerful pump laser. A spot has been reserved in the setup for mounting a 100 mW laser and its corresponding mirror. Its beam could then easily be aligned to pass through the two alignment irises, by performing a beamwalk as described previously, which should result in a coincidence rate at least 2.5 times higher than the current value, without any additional modifications.
+
+Replacing the crystal pair with a thicker one would have the highest impact on the down-conversion rate, which is proportional to the square of the crystal thickness, as seen in equation \eqref{spdc_intensity}. However, this would introduce additional problems that need to be corrected with spatial compensation crystals, as described in \cite{thorlabs_manual}.
 
 
 
@@ -730,12 +744,12 @@ computation beam not focused; focusing pump increases coincidences instead of de
 \appendix
 \listoffigures
 
-%\cleardoublepage
+\clearpage
 
 \bibliographystyle{plain}
 \bibliography{refs}
 
-%\cleardoublepage
+\clearpage
 \makedeclaration
 
 \end{document}
