@@ -8,12 +8,11 @@ as the source of truth and keep the scripts numerically consistent with each
 other (they share `spdc_physics.py` — **edit physics there, nowhere else**).
 
 `paper.pdf` is the reference paper (equations verified against the rendered PDF,
-not just text extraction). `code.txt` is the user's original Mathematica
-implementation of Eq.(9) that was debugged/rewritten in Python (see bug list
-below); keep it only for reference. Both live at the repo root (reference
-material, not source or generated output).
+not just text extraction; lives at the repo root). `code.txt` is the user's
+original Mathematica implementation of Eq.(9) that was debugged/rewritten in
+Python (see bug list below); kept only for reference, in `src/archive/`.
 
-## Layout (post 2026-07-05 reorg: `src/` + `output/` folders)
+## Layout (post 2026-07-05 reorg: `src/` + `output/`; archive added 2026-07-19)
 
 All Python/LaTeX source lives in `src/`; all generated PNGs and the LaTeX log
 live in `output/`. Every plot script resolves its output path off `__file__`
@@ -21,6 +20,17 @@ live in `output/`. Every plot script resolves its output path off `__file__`
 to `output/` correctly whether run as `python src/plot_fig6.py` from the repo
 root or `python plot_fig6.py` from inside `src/`. Run
 `python src/spdc_physics.py` to execute `sanity_check()` against the paper.
+`README.md` (repo root, added 2026-07-19) is the user-facing description of
+the scripts — keep it in sync with any physics/parameter changes.
+
+2026-07-19: superseded/testing material moved to **`src/archive/`**
+(`plot_detector_scan.py`, `plot_detector_scan_bandpass.py`,
+`spdc_eq9_note.tex`, `code.txt`) with outputs in **`output/archive/`**. The
+archived scripts still run: they insert `src/` into `sys.path` (shared modules
+stayed in `src/`), their `OUTDIR` points at `output/archive/`, and their
+`tee_stdout` names are prefixed `archive/`. What remains active in `src/`:
+`spdc_physics.py`, `detector_scan_common.py`, `textlog.py`, `plot_fig6.py`,
+`detector_counts.py`, `coincidence_counts.py`.
 
 ## Files
 
@@ -28,9 +38,10 @@ root or `python plot_fig6.py` from inside `src/`. Run
   every runnable script wraps its `__main__` body in it, so the printed
   summary (rates, angles, sanity numbers) is ALSO written to a txt in
   `output/`, named after the script's figure: `sanity_check.txt`
-  (spdc_physics), `spdc_fig6.txt`, `detector_scan.txt`,
-  `detector_scan_bandpass.txt`, `detector_scan_mysetup.txt`
-  (detector_counts), `coincidence_scan.txt` (coincidence_counts).
+  (spdc_physics), `spdc_fig6.txt`, `detector_scan_mysetup.txt`
+  (detector_counts), `coincidence_scan.txt` (coincidence_counts);
+  archived scans write `archive/detector_scan.txt` and
+  `archive/detector_scan_bandpass.txt`.
   Added 2026-07-16; figures/raw arrays are deliberately not duplicated there.
 - **`src/spdc_physics.py`** — the physics library; all constants and physics
   live here, the plot scripts contain none. Defines the SI constants, experiment
@@ -49,8 +60,9 @@ root or `python plot_fig6.py` from inside `src/`. Run
   (`lam_p, Pp, L, W, deff`), and `tuning_curve`/`crystal_rotation` of `lam_p`;
   all default to the paper constants, so existing callers are bit-identical
   (sanity check re-verified after adding them).
-- **`src/detector_scan_common.py`** — shared machinery for the two
-  detector-scan diagrams: `LAM_I_MAX` (3500 nm idler cutoff),
+- **`src/detector_scan_common.py`** — shared scan machinery (used by
+  detector_counts, coincidence_counts and the archived plot_detector_scan
+  scripts): `LAM_I_MAX` (3500 nm idler cutoff),
   `spectra_vs_thetam` (the θm × λ count matrix every panel derives from),
   `rotation_axes` (α axis + θm secondary-axis interpolators),
   `two_order_crossings`, `summarize`, `draw_panel`.
@@ -60,14 +72,16 @@ root or `python plot_fig6.py` from inside `src/`. Run
   set stamped in the suptitle): `output/spdc_fig6.png` with Eimerl (ref 2,
   the paper's indices — matches the published panels exactly) and
   `output/spdc_fig6_kato.png` with the default Kato (ref 1).
-- **`src/plot_detector_scan.py`** — fixed detector at external angle θs = 3°,
-  rotate the crystal, plot wavelength-integrated count vs crystal rotation
-  angle α. Two panels: broadband + hard 805–815 nm top-hat. Writes
-  `output/detector_scan.png`.
-- **`src/plot_detector_scan_bandpass.py`** — same scan with reworked
-  wavelength selection, three panels: (1) broadband (all λ), (2) Gaussian
-  bandpass FWHM 10 nm @ 810 nm, (3) monochromatic spectral density dN/dλ at
-  810 nm (counts/s/nm). Writes `output/detector_scan_bandpass.png`.
+- **`src/archive/plot_detector_scan.py`** (ARCHIVED 2026-07-19) — fixed
+  detector at external angle θs = 3°, rotate the crystal, plot
+  wavelength-integrated count vs crystal rotation angle α. Two panels:
+  broadband + hard 805–815 nm top-hat. Writes
+  `output/archive/detector_scan.png`.
+- **`src/archive/plot_detector_scan_bandpass.py`** (ARCHIVED 2026-07-19) —
+  same scan with reworked wavelength selection, three panels: (1) broadband
+  (all λ), (2) Gaussian bandpass FWHM 10 nm @ 810 nm, (3) monochromatic
+  spectral density dN/dλ at 810 nm (counts/s/nm). Writes
+  `output/archive/detector_scan_bandpass.png`.
 - **`src/detector_counts.py`** — photons/s on a real finite-aperture detector
   for the USER'S OWN setup (not the paper's), all knobs in a PARAMETERS block
   at the top (incl. the detector lab angle): pump 405 nm / 40 mW, collimated
@@ -118,7 +132,8 @@ root or `python plot_fig6.py` from inside `src/`. Run
   coincidences ×η_A·η_B ⟹ heralding Rc/Rs_A picks up a factor η_B; pump
   chain enters via the shared `PHYS_KW`. Accidentals use the η-scaled
   singles.
-- **`src/spdc_eq9_note.tex`** (built log at `output/spdc_eq9_note.log`) —
+- **`src/archive/spdc_eq9_note.tex`** (ARCHIVED 2026-07-19; built
+  PDF/log at `output/archive/spdc_eq9_note.pdf`/`.log`) —
   write-up of the paper's angle conventions and errata: Eq.(9) is correct as
   printed (external angle, per-unit-azimuth); the genuine misprints are in
   Eq.(7) (see below). Rewritten 2026-07-13, retracting the earlier

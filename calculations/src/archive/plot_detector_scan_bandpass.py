@@ -19,14 +19,18 @@ Physics from spdc_physics.py; scan machinery from detector_scan_common.py.
 Writes detector_scan_bandpass.png.
 """
 
+import sys
 from pathlib import Path
+
+# archived script: the shared modules live one level up, in src/
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 import detector_scan_common as com
 
-OUTDIR = Path(__file__).resolve().parent.parent / "output"
+OUTDIR = Path(__file__).resolve().parent.parent.parent / "output" / "archive"
 
 
 def gaussian_bandpass(lam, lam0, fwhm):
@@ -100,6 +104,6 @@ def run(theta_det_deg=3.0, dth_det=2e-3, theta_m_cut=None,
 
 if __name__ == "__main__":
     from textlog import tee_stdout
-    with tee_stdout("detector_scan_bandpass.txt"):
+    with tee_stdout("archive/detector_scan_bandpass.txt"):
         print(f"indices: {com.phys.sellmeier_label()}")
         run()
