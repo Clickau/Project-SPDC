@@ -17,7 +17,7 @@ logostyle=flat,
 \usepackage[ngerman,english]{babel}
 \usepackage[hidelinks]{hyperref}
 
-\date{\today}
+\date{19.07.2026}
 
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -76,7 +76,7 @@ The results show a 25-fold improvement in the coincidence counts, with a CHSH st
 
 \section{Theoretical Background}
 
-Spontaneous parametric down-conversion is a non-linear optical process that converts a photon of higher energy (called a pump photon) into a pair of photons of lower energy (called the signal and idler photons) subject to energy and momentum conservation. This constrant imposed by the conservation laws is referred to as phase-matching. The effect has first been observed in the 1960s and has since become a common technique for developing single-photon sources. One of the possible phase-matching schemes is Type-I SPDC, in which the signal and idler photons that are produced have the same polarization. The necessary conditions for this process can be met by using a birefringent crystal such as $\beta$-BBO \cite{spdc-intensity}.
+Spontaneous parametric down-conversion is a non-linear optical process that converts a photon of higher energy (called a pump photon) into a pair of photons of lower energy (called the signal and idler photons) subject to energy and momentum conservation. This constraint imposed by the conservation laws is referred to as phase-matching. The effect was first observed in the 1960s and has since become a common technique for developing single-photon sources. One of the possible phase-matching schemes is Type-I SPDC, in which the signal and idler photons that are produced have the same polarization. The necessary conditions for this process can be met by using a birefringent crystal such as $\beta$-BBO \cite{spdc-intensity}.
 
 \subsection{Birefringence in BBO crystals}
 
@@ -101,7 +101,7 @@ The ordinary and principal extraordinary refractive indices are described as fun
 \end{equation}
 
 
-Wave plates are optical components made out of a birefringent crystal like quartz that manipulate the polarization of light in certain ways. For example, half-wave plates rotate the polarization of incoming light by double the angle between their optical axis and the polarization direction of the incoming light. For example, if vertically polarized light hits a half-wave plate whose optical axis makes an angle of 22.5$\degree$ to the vertical direction, the output beam will be polarized to 45$\degree$.
+Wave plates are optical components made out of a birefringent crystal like quartz that manipulate the polarization of light in certain ways. Half-wave plates rotate the polarization of incoming light by double the angle between their optical axis and the polarization direction of the incoming light. For example, if vertically polarized light hits a half-wave plate whose optical axis makes an angle of 22.5$\degree$ to the vertical direction, the output beam will be polarized to 45$\degree$.
 
 
 \subsection{Spontaneous phase-matching in BBO crystals}
@@ -134,7 +134,7 @@ Let $\theta_s'$ and $\theta_i'$ be the angles formed by the pump ray with the si
 \end{equation}
 
 
-Figure \ref{fig:spdc_cone} shows the typical configuration for type I phase matching. A BBO crystal is cut thinly in such a way, that its optical axis makes the angle $\theta_m$ with the normal to its surface. Thus, a pump beam that hits the crystal under normal incidence will produce degenerate photon pairs symmetrically under the angle $\theta_s'$ given by \eqref{momentum_conservation_degenerate}. The signal and idler rays are then refracted at the air-crystal boundary and leave the crystal under the laboratory angle $\theta_sL$ with the pump beam direction:
+Figure \ref{fig:spdc_cone} shows the typical configuration for type I phase matching. A BBO crystal is cut thinly in such a way that its optical axis makes the angle $\theta_m$ with the normal to its surface. Thus, a pump beam that hits the crystal under normal incidence will produce degenerate photon pairs symmetrically under the angle $\theta_s'$ given by \eqref{momentum_conservation_degenerate}. The signal and idler rays are then refracted at the air-crystal boundary and leave the crystal under the laboratory angle $\theta_s$ with the pump beam direction:
 
 \begin{equation}
     n_o(2\lambda_p) \cdot \sin (\theta_s') = \sin (\theta_s)
@@ -158,7 +158,7 @@ As such, capturing the photons is only a matter of placing the detectors at the 
 
 \subsection{Computing SPDC intensity}
 
-A method for computing the intensity of spontaneous parametric down-conversion, taking into account all of the emission wavelengths and directions is presented in \cite{spdc-intensity}. This paper takes into account imperfect phase-matching by considering the mismatch wave vector $\mathbf{\Delta k} = \mathbf{k}'_s + \mathbf{k}'_i - \mathbf{k}'_p$, which gets decomposed into longitudinal ($\Delta k_z$) and transverse ($\kappa$) components:
+A method for computing the intensity of spontaneous parametric down-conversion, taking into account all of the emission wavelengths and directions, is presented in \cite{spdc-intensity}. This paper accounts for imperfect phase-matching by considering the mismatch wave vector $\mathbf{\Delta k} = \mathbf{k}'_s + \mathbf{k}'_i - \mathbf{k}'_p$, which gets decomposed into longitudinal ($\Delta k_z$) and transverse ($\kappa$) components:
 
 \begin{equation}
     \Delta k_z = \sqrt{{k'_s}^2 - \kappa_s^2} + \sqrt{{k'_i}^2 - \kappa_i^2} - k'_p
@@ -186,9 +186,9 @@ This expression will be used in a later section to compute the theoretically exp
 
 \subsection{Generating polarization-entangled photons}
 
-Spontaneous parametric down-conversion can be used to obtain pairs of polarization-entangled photons by replacing the single BBO crystal with a pair of BBO crystals with optical axes perpendicular to each other, as shown in Figure \ref{fig:crystal_sandwich_cones}. Positioning the axis of the first crystal horizontally and that of the second crystal vertically and polarizing the pump laser to $45\degree$ allows for an equal probability of each pump photon being down-converted in either of the two crystals. A signal-idler pair generated in the first crystal will then be vertically polarizer, and a pair generated in the first crystal will be horizontally polarized.
+Spontaneous parametric down-conversion can be used to obtain pairs of polarization-entangled photons by replacing the single BBO crystal with a pair of BBO crystals with optical axes perpendicular to each other, as shown in Figure \ref{fig:crystal_sandwich_cones}. Positioning the axis of the first crystal horizontally and that of the second crystal vertically and polarizing the pump laser to $45\degree$ allows for an equal probability of each pump photon being down-converted in either of the two crystals. A signal-idler pair generated in the first crystal will then be vertically polarized, and a pair generated in the second crystal will be horizontally polarized.
 
-If the setup is aligned in such a way, that the photons emitted by either crystal are captured by the same detectors, one cannot distinguish where a detected photon came from, hence the polarization of a given photon is in a superposition. Since photons in a pair must have the same polarization, they are in the entangled Bell state \cite{ultrabright_source_entangled}:
+If the setup is aligned in such a way that the photons emitted by either crystal are captured by the same detectors, one cannot distinguish where a detected photon came from, hence the polarization of a given photon is in a superposition. Since photons in a pair must have the same polarization, they are in the entangled Bell state \cite{ultrabright_source_entangled}:
 
 \begin{equation}
     \ket{\Phi^+} = \frac{1}{\sqrt{2}} \bigl(\ket{HH} + \ket{VV}\bigr)
@@ -208,9 +208,9 @@ respect to each other. Figure taken from \cite{ultrabright_source_entangled}.}
 
 \subsection{The Clauser-Horne-Shimony-Holt (CHSH) inequality}
 
-CHSH is a version of Bell's inequality that can be used to test the entanglement of particles. This inequality holds only in local realistic theories, while quantum mechanics predicts it can be violated. By experimentally measuring a violation, one can prove that the state being measured is entangled, a quantum mechanical property that cannot by explained by classical physics.
+CHSH is a version of Bell's inequality that can be used to test the entanglement of particles. This inequality holds only in local realistic theories, while quantum mechanics predicts it can be violated. By experimentally measuring a violation, one can prove that the state being measured is entangled, a quantum mechanical property that cannot be explained by classical physics.
 
-To apply this to the setup described above, rotatable linear polarizers can be placed such that the down-converted photons are forced to pass through them before arriving at the detectors. The single-photon detectors are then connected to a coincidence counter, that counts the number of simultaneous detections within a small time window. Using two angle settings for each of the polarizers ($\alpha, \alpha'$ for the first one, $\beta, \beta'$ for the second one), the CHSH inequality is \cite{qued_manual}:
+To apply this to the setup described above, rotatable linear polarizers can be placed such that the down-converted photons are forced to pass through them before arriving at the detectors. The single-photon detectors are then connected to a coincidence counter that counts the number of simultaneous detections within a small time window. Using two angle settings for each of the polarizers ($\alpha, \alpha'$ for the first one, $\beta, \beta'$ for the second one), the CHSH inequality is \cite{qued_manual}:
 
 \begin{equation}
     |S(\alpha, \alpha', \beta, \beta')| = \left| E(\alpha, \beta) + E(\alpha', \beta) - E(\alpha, \beta') + E(\alpha', \beta') \right| \leq 2
@@ -251,7 +251,7 @@ The maximum violation in a Bell state is obtained for the angles $\alpha = 0\deg
 
 \subsection{Accidental coincidences}
 
-As highlighted above, the CHSH experiment relies on measuring the coincidence counts with different polarization settings. This is, in fact, necessary for any experiment performed using the down-converted photon pairs, because the only way to tell that a photon pair was produced is to detect both  photons at the same time. It is important to note that the coincidence rate will be different than the individual rates of the detectors in a real experiment, because the detectors have dark counts and because there will always be a certain amount of stray light entering them. The coincidence count much less affected by these random events because it is much more unlikely for two such events to occur at almost the same time, triggering both detectors at once.
+As highlighted above, the CHSH experiment relies on measuring the coincidence counts with different polarization settings. This is, in fact, necessary for any experiment performed using the down-converted photon pairs, because the only way to tell that a photon pair was produced is to detect both  photons at the same time. It is important to note that the coincidence rate will be different than the individual rates of the detectors in a real experiment, as the detectors have dark counts and there will always be a certain amount of stray light entering them. The coincidence count is much less affected by these random events because it is much more unlikely for two such events to occur at almost the same time, triggering both detectors at once.
 
 For a coincidence time window $\Delta t_w$, an integration time of 1 s, and individual counts $N_1$ and $N_2$ assumed to be random and independent, the rate of accidental coincidences is:
 
@@ -276,7 +276,7 @@ For a coincidence time window $\Delta t_w$, an integration time of 1 s, and indi
 
 At the beginning of this project, a source of entangled photons based on Type I SPDC had already been built at the Quantum Technology Laboratory of the OTH Regensburg. A schematic drawing of the existing setup is presented in Figure \ref{fig:old_setup}.
 
-The setup was mounted on an optical table and included two different pump lasers that could be used individually, a 10 mW one that was not temperature stabilized and a 20 mW temperature stabilized one (diode Thorlabs L405P20, mount Thorlabs LDM9T), both operating at 405 nm. The pump beam was directed onto a pair of 0.1 mm thick BBO crystals cut with a phase-matching angle of 29.3$\degree\, \pm$ 0.2$\degree$ (Newlight Photonics PABBO5010-405(I)-HA3) and then into a beamtrap. The 810 nm down-converted photons exiting the crystals were reflected by two mirrors (Thorlabs PF10-03-P01, PF20-03-P01), passed through colored glass filters (Thorlabs FGL610) and were picked up by optical fibers (Thorlabs MR17L01) with the help of a lens mounted in the fiber couplers. These were connected to a detector box with builtin avalanche photodiode (APD) detectors and coincidence counter (qutools quED).
+The setup was mounted on an optical table and included two different pump lasers that could be used individually, a 10 mW one that was not temperature stabilized and a 20 mW temperature stabilized one (diode Thorlabs L405P20, mount Thorlabs LDM9T), both operating at 405 nm. The pump beam was directed onto a pair of 0.1 mm thick BBO crystals cut with a phase-matching angle of 29.3$\degree\, \pm$ 0.2$\degree$ (Newlight Photonics PABBO5010-405(I)-HA3) and then into a beamtrap. The 810 nm down-converted photons exiting the crystals were reflected by two mirrors (Thorlabs PF10-03-P01, PF20-03-P01), passed through colored glass filters (Thorlabs FGL610) and were picked up by optical fibers (Thorlabs MR17L01) with the help of a lens mounted in the fiber couplers. These were connected to a detector box with built-in avalanche photodiode (APD) detectors and coincidence counter (qutools quED).
 
 
 \begin{figure}[htbp]
@@ -288,7 +288,7 @@ The setup was mounted on an optical table and included two different pump lasers
 The crystal pair was mounted with its axes at 45$\degree$ with respect to the horizontal, which allowed the vertically polarized pump beam from the laser to induce SPDC in both crystals without the need for a waveplate.
 
 
-The alignment of the setup was performed by using a separated red alignment laser, which could be temporarily mounted onto the same beampath using a fiber coupler. The crystal could then be replaced by an axicon (Thorlabs AX1265), which is a special optical component that turns a beam of light that hits it in the center under normal incidence into a cone of light, with a half opening angle of 3$\degree$. This perfectly matches the cone that is generated by SPDC and can be used to visually position the detectors and filters.
+The alignment of the setup was performed by using a separated red alignment laser, which could be temporarily mounted onto the same beam path using a fiber coupler. The crystal could then be replaced by an axicon (Thorlabs AX1265), which is a special optical component that turns a beam of light that hits it in the center under normal incidence into a cone of light, with a half opening angle of 3$\degree$. This perfectly matches the cone that is generated by SPDC and can be used to visually position the detectors and filters.
 
 The mirrors, fiber mounts, crystal and axicon are all mounted using kinematic mounts that allow precise rotation about the vertical and horizontal axes. Components marked as "removable" are attached using magnetic mounts, which allow them to be taken out and placed back in the exact same orientation. When in use, the entire setup is covered with a dark cloth to prevent stray light from influencing the measurements. Under these conditions, the dark counts of the detectors are about 400 and 800 per second, respectively.
 
@@ -310,7 +310,7 @@ Furthermore, a measurement of the CHSH inequality had previously been performed,
 
 Noticing the low proportion of coincidence counts to single counts, a first idea is to block out more of the stray light that might be entering the fibers and causing random detections. Indeed, removing the crystal pair completely from the setup and replacing it with a polarizer, which serves the single purpose of scattering a small portion of the pump beam in random directions, results in very similar rates to the ones obtained with the crystals in place. This confirms that the vast majority of the detected photons are scattered pump photons that are not being sufficiently blocked by the filters.
 
-A simple solution is replacing the colored glass filters with 810 nm bandpass filters, with a full width at half maximum (FWHM) of 10 nm (Thorlabs FBH810-10), which were already available in the lab. Measuring again shows a vastly different picture: 1400/800 single counts with 0 coincidences (with the crystals mounted). Taking into account the detector dark counts, this confirms that the bandpass filters are much better at removing the unwanted stray radiation. It also shows that the setup currently produces no actual down-converted photons.
+A simple solution is replacing the colored glass filters with 810 nm bandpass filters, with a full width at half maximum (FWHM) of 10 nm (Thorlabs FBH810-10), which were already available in the lab. Measuring again shows a vastly different picture: 1400/800 single counts with 0 coincidences (with the crystals mounted). Taking into account the detector dark counts, this indicates that the bandpass filters are much better at removing the unwanted stray radiation. It also shows that the setup currently produces no actual down-converted photons.
 
 An important observation is that the bandpass filters have been used previously, but the measurements with them have always resulted in less than 5 coincidences per second, even after multiple attempts at alignment. This suggests that there is a deeper underlying problem that makes proper alignment impossible with the current setup.
 
@@ -319,7 +319,7 @@ An important observation is that the bandpass filters have been used previously,
 
 A possible cause for the low measured counts is a deviation of the pump laser wavelength from the nominal 405 nm due to manufacturing tolerances or temperature fluctuations. The ideal phase-matching condition given by equation \eqref{momentum_conservation_degenerate} predicts that even a small deviation of $\lambda_p$ could change the angle under which the most down-converted photons are emitted and cause the measured rates to drop. This effect will be analysed in more detail later in this report.
 
-A measurement of the pump wavelength drift as a function of temperature has been attempted using a Broadcome Qmini AFBR-S20M2WV spectrometer. The results are shown in figure \ref{fig:???}. Although the measurements can only be used qualitatively, since the 1.5 nm spectral resolution of the device is too large for good absolute accuracy, the results show a temperature coefficient of about 0.06 nm/K, close to the value of 0.05 nm/K given in the Thorlabs manual \cite{thorlabs_manual}.
+A measurement of the pump wavelength drift as a function of temperature has been attempted using a Broadcom Qmini AFBR-S20M2WV spectrometer. The results are shown in figure \ref{fig:pump_temperaure}. Although the measurements can only be used qualitatively, since the 1.5 nm spectral resolution of the device is too large for good absolute accuracy, the results show a temperature coefficient of about 0.06 nm/K, close to the value of 0.05 nm/K given in the Thorlabs manual \cite{thorlabs_manual}.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=1]{figures/pump_temperature.png}}
@@ -334,7 +334,7 @@ There is a simple solution to this problem: the crystal pair is placed in a kine
 
 \subsubsection{Imperfect alignment}
 
-Another possible cause for the low rates was the imperfect alignment of the setup. The alignment laser plays a vital role, since it determines the positions of the detectors, which are assumed to coincide with the maxima of the SPDC process. For this to be the case, the red alignment laser has to be precisely aligned to the same beampath as the UV pump laser. With the existing setup, this could only be done by moving the fiber couple of the alignment laser by hand, until the pump beam could pass through it and the pump and alignment beams would hit the same spot on the beam stop. This made alignment difficult and possibly too imprecise. 
+Another possible cause for the low rates was the imperfect alignment of the setup. The alignment laser plays a vital role, since it determines the positions of the detectors, which are assumed to coincide with the maxima of the SPDC process. For this to be the case, the red alignment laser has to be precisely aligned to the same beam path as the UV pump laser. With the existing setup, this could only be done by moving the fiber coupler of the alignment laser by hand, until the pump beam could pass through it and the pump and alignment beams would hit the same spot on the beam stop. This made alignment difficult and possibly too imprecise. 
 
 Indeed, comparing this to the alignment procedure detailed in the Thorlabs instruction manual \cite{thorlabs_manual}, which also uses the same axicon for detector placement, it became clear that the method presented in the manual was superior. This method allowed for precise alignment of the two laser beams on the same path by performing a beamwalk with each, until they both passed through the same two iris openings simultaneously. Implementing this alignment method required redesigning the entire optical setup, which is the topic of the following section.
 
@@ -353,7 +353,7 @@ Indeed, comparing this to the alignment procedure detailed in the Thorlabs instr
 \subsection{Planning}
 
 
-Figure \ref{fig:new_setup} shows a schematic drawing of the proposed new setup. The main feature of this design consists of two alignment irises that can be used to precisely position and orient the laser beams. The first one is a Thorlabs ID15 that can be opened and closed, while the second one is improvised out of black cardboard with a small hole in the middle. These two irises define a unique beam path through space, assuming mirror 3 stays fixed. Furthermore, the crystal has been moved after mirror 2, as this allows both mirrors 1 and 2 to be used for beamwalking the pump laser. These two mirrors provide four degrees of freedom (DOF) through their kinematic mounts, allowing for both translation and rotation of the pump beam (also 4 DOF) and thus making it possible to precisely guide it through both alignment irises using only the screws of the mirror mounts. Mirror 4 has been added to allow the same beamwalking procedure for the red laser beam (2 DOF from the mirror, 2 DOF from the fiber coupler itself). The two laser beams can thus be made to follow the exact same optical path.
+Figure \ref{fig:new_setup} shows a schematic drawing of the proposed new setup. The main feature of this design consists of two alignment irises that can be used to precisely position and orient the laser beams. The first one is a Thorlabs ID15 that can be opened and closed, while the second one is improvised out of black cardboard with a small hole in the middle. These two irises define a unique beam path through space, assuming mirror 3 stays fixed. Furthermore, the crystal has been moved after mirror 2, as this allows both mirrors 1 and 2 to be used for beamwalking the pump laser. These two mirrors provide four degrees of freedom (DOF) through their kinematic mounts, allowing for both translation and rotation of the pump beam (also 4 DOF) and thus making it possible to guide it through both alignment irises using only the screws of the mirror mounts. Mirror 4 has been added to allow the same beamwalking procedure for the red laser beam (2 DOF from the mirror, 2 DOF from the fiber coupler itself). The two laser beams can thus be made to follow the exact same optical path.
 
 Another iris (Thorlabs ID15) has been added in front of the pump laser to clean up the stray radiation emitted around the collimated beam and a half-wave plate (Thorlabs WPH10M-405) has been added to enable rotating the pump polarization. Mirrors 1 and 2 have also been upgraded to PF10-03-F01, which is better at reflecting 405 nm light. A place and a mirror have also been reserved for a 100 mW laser that can be added in the future to further improve the count rates.
 
@@ -369,7 +369,7 @@ A parts list was created and an order for the necessary components was placed.
 
 \subsection{Building the new setup}
 
-The new setup has been built by loosly following the instructions given in \cite{thorlabs_manual}, with some adaptations. A separate manual with step-by-step instructions has been written to assist with any adjustments that might be needed in the future.
+The new setup has been built by loosely following the instructions given in \cite{thorlabs_manual}, with some adaptations. A separate manual with step-by-step instructions has been written to assist with any adjustments that might be needed in the future.
 
 The first step was to place the 20 mW laser and orient its beam approximately perpendicular to the wall. The beam cleaning iris was placed in front of it and aligned such that the center of the beam could pass through it (Figure \ref{fig:beam_cleaning_iris}). The mirrors 1, 2 and 3 were then placed in this order, each time making sure that the beam was always at the same height and approximately parallel to the grid lines. Afterwards, the two alignment irises were placed right onto the beam path and fixed in their final positions. Small adjustments to the beam path were made with the kinematic mirror mounts to make sure the beam and the iris openings were perfectly concentric.
 
@@ -381,7 +381,7 @@ The first step was to place the 20 mW laser and orient its beam approximately pe
 \end{figure}
 
 
-Afterwards, the red alignment laser and mirror 4 were mounted in their approximate places and a beamwalk was performed to orient the laser beam through the same two alignment irises. First, the alignment iris 1 was closed almost completely and only the adjustment screws of the fiber coupler mount were used to orient the beam precisely through the opening. Then the first iris was opened completely and only the adjustment screws of mirror 4 were used to orient the beam precisely through the opening of the second alignment iris. The procedure was repeated, alternating the irises, until the alignment converged and the beam was precisely tuned to the same path as the pump laser beam (Figure \ref{fig:both_beams_aligned})
+Afterwards, the red alignment laser and mirror 4 were mounted in their approximate places and a beamwalk was performed to orient the laser beam through the same two alignment irises. First, the alignment iris 1 was closed almost completely and only the adjustment screws of the fiber coupler mount were used to orient the beam through the opening. Then the first iris was opened and only the adjustment screws of mirror 4 were used to orient the beam through the opening of the second alignment iris. The procedure was repeated, alternating the irises, until the alignment converged and the beam was precisely tuned to the same path as the pump laser beam (Figure \ref{fig:both_beams_aligned})
 
 \begin{figure}[htbp]
     \centering
@@ -404,7 +404,7 @@ At this point, the axicon could be put into place and positioned in such a way t
 
 
 
-Afterwards, the detector fiber couplers could be put into place and positioned in such a way, that the outermost parts of the alignment circle passed right through the middle of the lens. Proper placement could also be verified by checking the light coming out at the other end of the fibers. The bandpass were also placed in front of the fiber couplers, but were not yet screwed in place (Figure \ref{fig:detectors_aligned}).
+The detector fiber couplers were then positioned so that the outermost parts of the alignment circle passed right through the middle of the lens. Proper placement could also be verified by checking the light coming out at the other end of the fibers. The bandpass filters were also placed in front of the fiber couplers, but were not yet screwed in place (Figure \ref{fig:detectors_aligned}).
 
 
 \begin{figure}[htbp]
@@ -429,9 +429,9 @@ The orientation of the fiber couplers is very important and was adjusted in two 
 
 A finer adjustment was performed by removing the axicon from its magnetic mount and replacing it with a colored glass filter. Shining the pump laser onto the filter made it fluoresce, which means that photons were emitted from the exact same place where the crystal will be. This allowed for precise orientation of the fiber couplers by maximizing the single count rates measured by the detectors.
 
-The half-wave plate could now also be placed into a rotation mount and inserted, making sure that the pump beam passed through the center under normal incidence. The angle was initially set to 0$\degree$.
+The half-wave plate could now also be placed into a rotation mount and inserted, ensuring the pump beam passed through the center under normal incidence. The angle was initially set to 0$\degree$.
 
-Finally, the crystal pair could be placed in its final position, making sure that its axes were horizontal and vertical, respectively and that the beam was hitting it under normal incidence. Afterwards, the crystal was tilted about its horizontal axis, until the coincidence count rate was maximized. Since the laser is vertically polarized, this only affected the crystal with the optical axis positioned vertically. To adjust the other crystal, the half-wave plate was set to 45$\degree$ (making the pump beam horizontally polarized) and the crystal was tilted about its vertical axis to maximize coincidences. Interstingly, the coincidence counts were very insensitive to the crystal angle, staying almost constant with tilts of up to a few degrees. This is a consequence of the crystals being very thin and will be explained in more detail later in the report.
+Finally, the crystal pair could be placed in its final position, making sure that its axes were horizontal and vertical, respectively, and that the beam was hitting it under normal incidence. Afterwards, the crystal was tilted about its horizontal axis, until the coincidence count rate was maximized. Since the laser is vertically polarized, this only affected the crystal with the optical axis positioned vertically. To adjust the other crystal, the half-wave plate was set to 45$\degree$ (making the pump beam horizontally polarized) and the crystal was tilted about its vertical axis to maximize coincidences. Interestingly, the coincidence counts were very insensitive to the crystal angle, staying almost constant with tilts of up to a few degrees. This is a consequence of the crystals being very thin and will be explained in more detail later in the report.
 
 As a final optimization, the pump laser was focused onto the crystal by turning its lens with a special tool. Any deviation of the beam caused by this could be corrected using only mirror 1. This concludes the adjustment of the new setup.
 
@@ -468,14 +468,14 @@ Table \ref{tab:counts_20mW} shows the measured coincidence counts with the 20 mW
     Real counts & 300 & 250 & 40 \\
     \bottomrule
   \end{tabular}
-  \caption{Measured count rates (estimation) with focused 20 mW pump laser, integration time 1 s, coincidence window 20 ns}
+  \caption{Measured count rates (estimated) with focused 20 mW pump laser, integration time 1 s, coincidence window 20 ns}
   \label{tab:counts_20mW}
 \end{table}
 
 
 \subsubsection{Coincidence counts with 40 mW}
 
-To further improve the rates, the 20 mW laser diode was swapped for a 40 mW one (Thorlabs DL5146-101S) and it was focused on the crystals. The pump laser was coarsely oriented to pass through the alignment irises again, then the fine adjustment was done using mirrors 1 and 2. The alignment laser also had to be reoriented for this reason. The results are shows in Table \ref{tab:counts_40mW} and Figure \ref{fig:counts_40mW}, with 45$\degree$ pump polarization. The accidental counts amount to 0.06 per second.
+To further improve the rates, the 20 mW laser diode was swapped for a 40 mW one (Thorlabs DL5146-101S) and it was focused on the crystals. The pump laser was coarsely oriented to pass through the alignment irises again, then the fine adjustment was done using mirrors 1 and 2. The alignment laser also had to be reoriented for this reason. The results are shown in Table \ref{tab:counts_40mW} and Figure \ref{fig:counts_40mW}, with 45$\degree$ pump polarization. The accidental counts amount to 0.06 per second.
 
 Taking the initial coincidence rate of less than 5 per second that had previously been obtained (with the bandpass filters) as a reference, this amounts to a 25-fold improvement, with only a factor of 3 being due to increased laser power.
 
@@ -515,13 +515,13 @@ The first measurement resulted in a value of $S = 1.96 \pm 0.04$, which does not
 
 where $\varphi$ is an essentially random phase, determined by unknown manufacturing tolerances. This is not a Bell state and cannot be used directly in the CHSH inequality.
 
-The optimal way to fix this issue would be to place a birefringent crystal (like BBO, but cut to a different angle to prevent accidental SPDC, or quartz) between the half-wave plate and the crystal pair, with the optical axis in the horizontal plane. Since the pump laser is polarized to 45$\degree$, its vertical component would experience a different index of refraction than the horizontal component, thus inducing a phase shift proportional to the crystal thickness. This phase shift could be precisely controlled by tilting the compensation crystal about the vertical axis, thereby changing the length travelled inside the crystal, and would allow the creation of a maximally entangled state with the optimal count rates.
+The optimal way to fix this issue would be to place a birefringent crystal (like a quarter-wave plate) between the half-wave plate and the crystal pair, with the optical axis in the horizontal plane. Since the pump laser is polarized to 45$\degree$, its vertical component would experience a different index of refraction than the horizontal component, thus inducing a phase shift proportional to the crystal thickness. This phase shift could be precisely controlled by tilting the compensation crystal about the vertical axis, thereby changing the length travelled inside the crystal, and would allow the creation of a maximally entangled state with the optimal count rates.
 
 An attempt was made to use a piece of quartz glass available in the lab as a compensation crystal. This did not work, most likely due to the lack of strong birefringence in amorphous quartz.
 
 Due to time pressure, a temporary workaround was implemented instead of the ideal solution, resulting in a proper Bell state at the expense of a portion of the count rate. As explained above, the phase difference is proportional to the thickness of the crystals. Tilting the crystal pair about either horizontal or vertical axis has the additional effect (beyond altering the phase-matching condition) of changing the length travelled by photons inside the crystal, and thus the phase difference. One can thus control $\varphi$ by only tilting the crystal, while also losing a portion of the coincidence counts due to imperfect phase-matching. 
 
-To perform this adjustment, the polarizers were set to 45$\degree$ and 135$\degree$, respectively and the coincidence counts were measured. This amounts to the projection operator $\ket{+-}\bra{+-}$, where $\{\ket{+} = \frac{1}{\sqrt{2}} \bigl( \ket{H} + \ket{V} \bigr), \ket{-} = \frac{1}{\sqrt{2}} \bigl( \ket{H} - \ket{V} \bigr)\}$ is the diagonal basis. The amplitude is:
+To perform this adjustment, the polarizers were set to 45$\degree$ and 135$\degree$, respectively, and the coincidence counts were measured. This amounts to the projection operator $\ket{+-}\bra{+-}$, where $\{\ket{+} = \frac{1}{\sqrt{2}} \bigl( \ket{H} + \ket{V} \bigr), \ket{-} = \frac{1}{\sqrt{2}} \bigl( \ket{H} - \ket{V} \bigr)\}$ is the diagonal basis. The amplitude is:
 
 \begin{equation}
     \begin{split}
@@ -538,7 +538,7 @@ To perform this adjustment, the polarizers were set to 45$\degree$ and 135$\degr
     \label{projection_pm_amplitude}
 \end{equation}
 
-The probability amplitude of this measurement is:
+The probability of this measurement is:
 
 \begin{equation}
     \begin{split}
@@ -580,14 +580,14 @@ This means that creating a Bell state with $\varphi = 0$ is equivalent to minimi
 \subsubsection{The CHSH inequality}
 
 
-Finally, the CHSH measurement can be performed again with $\alpha = 0^\circ$, $\alpha' = 45^\circ$ on polariser 2 and $\beta = 22.5^\circ$, $\beta' = 67.5^\circ$ on polariser 1 and using equations \eqref{CHSH}, \eqref{CHSH_correlation}, \eqref{CHSH_std_deviation}, \eqref{CHSH_correlation_std_deviation}, \eqref{CHSH_strength}. The results are shown in Table \ref{tab:chsh}, where $C$ denotes the coincidence counts of a single setting and $N$ the sum over the four settings belonging to one correlation coefficient. The final result is $S = 2.681 \pm 0.036$, an 18.6-$\sigma$ violation of Bell's inequality.
+Finally, the CHSH measurement can be performed again with $\alpha = 0^\circ$, $\alpha' = 45^\circ$ on polarizer 2 and $\beta = 22.5^\circ$, $\beta' = 67.5^\circ$ on polarizer 1 and using equations \eqref{CHSH}, \eqref{CHSH_correlation}, \eqref{CHSH_std_deviation}, \eqref{CHSH_correlation_std_deviation}, \eqref{CHSH_strength}. The results are shown in Table \ref{tab:chsh}, where $C$ denotes the coincidence counts of a single setting and $N$ the sum over the four settings belonging to one correlation coefficient. The final result is $S = 2.681 \pm 0.036$, an 18-$\sigma$ violation of Bell's inequality.
 
 
 \begin{table}[htbp]
   \centering
   \begin{tabular}{l c l c r r c}
     \toprule
-    \multicolumn{2}{c}{Polariser 2} & \multicolumn{2}{c}{Polariser 1}
+    \multicolumn{2}{c}{Polarizer 2} & \multicolumn{2}{c}{Polarizer 1}
       & & & \\
     \cmidrule(lr){1-2} \cmidrule(lr){3-4}
     Setting & Angle & Setting & Angle & $C$ & $N$ & $E \pm \Delta E$ \\
@@ -641,7 +641,7 @@ To assess the effectiveness of the new setup, a computer simulation was run base
 
 \subsection{Angle-resolved spectra of SPDC}
 
-Firstly, equation \eqref{spdc_intensity} has been integrated numerically for values of $-6\degree \leq \theta_s \leq 6\degree$ and $420\ \text{nm} \leq \lambda_s \leq 1000\ \text{nm}$ to recreate FIG. 6 of \cite{spdc-intensity}, using the crystal parameters provided in the paper. The resulting down-conversion intensity as a function of signal wavelength $\lambda_s$ and angle of emission $\theta_s$ for different phase-matching angles $\theta_m$ is shown in Figure \ref{fig:fig6_paper}, which is visually identical to the original. It can be seen that changing the phase-matching angle (which can be achieved by tilting the crystal) has the effect of sweeping opening angle of the SPDC cone, with the degenerate photons being emitted collinearly for $\theta_m = 28.6\degree$ and at about $\theta_s = 3\degree$ for $\theta_m = 29.1\degree$.\footnote{Note that this calculation was performed with the Sellmeier coefficients used in \cite{spdc-intensity}, which are taken from \cite{sellmeier_coeff_used_in_paper}. These are different than those presented in equations \eqref{sellmeier_n_o} and \eqref{sellmeier_n_e} and have been used here to allow for a direct comparison of the figures. The rest of the calculations in this report use the coefficients from equations \eqref{sellmeier_n_o} and \eqref{sellmeier_n_e}, as they are more frequently cited in modern literature.}
+Firstly, equation \eqref{spdc_intensity} has been integrated numerically for values of $-6\degree \leq \theta_s \leq 6\degree$ and $420\ \text{nm} \leq \lambda_s \leq 1000\ \text{nm}$ to recreate FIG. 6 of \cite{spdc-intensity}, using the crystal parameters provided in the paper. The resulting down-conversion intensity as a function of signal wavelength $\lambda_s$ and angle of emission $\theta_s$ for different phase-matching angles $\theta_m$ is shown in Figure \ref{fig:fig6_paper}, which is visually identical to the original. It can be seen that changing the phase-matching angle (which can be achieved by tilting the crystal) has the effect of sweeping the opening angle of the SPDC cone, with the degenerate photons being emitted collinearly for $\theta_m = 28.6\degree$ and at about $\theta_s = 3\degree$ for $\theta_m = 29.1\degree$.\footnote{Note that this calculation was performed with the Sellmeier coefficients used in \cite{spdc-intensity}, which are taken from \cite{sellmeier_coeff_used_in_paper}. These are different than those presented in equations \eqref{sellmeier_n_o} and \eqref{sellmeier_n_e} and have been used here to allow for a direct comparison of the figures. The rest of the calculations in this report use the coefficients from equations \eqref{sellmeier_n_o} and \eqref{sellmeier_n_e}, as they are more frequently cited in modern literature.}
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.5]{figures/fig6_paper.png}}
@@ -652,7 +652,7 @@ Firstly, equation \eqref{spdc_intensity} has been integrated numerically for val
 
 \subsection{Effects of crystal tilt on count rates}
 
-A quantitative assessment of the effect of crystal tilt on the expected detector count rates requires a little more effort. Consider a detector/fiber mount fixed at a 3$\degree$ lab angle, with aperture $d_1 = 6$ mm and at a distance $d_2 = 625$ mm from the crystal (which corresponds to an angular spread of $\Delta \theta_s = \frac{d_1}{d_2}$ over which the photon flux is integrated in both radial and azimuthal directions). The bandpass filter in front of it can be modelled as a Gaussian attenuation function, with center wavelength 810 nm and FWHM 10 nm, which scales the photon flux according to its wavelength. The effect of refraction of the pump beam for non-normal incidence also has to be considered. The results of numerical integration over this domain as a function of the crystal tilt angle $\alpha$ is shown in Figure \ref{fig:detector_scan}. The following parameters were used in this calculation:
+A quantitative assessment of the effect of crystal tilt on the expected detector count rates requires a little more effort. Consider a detector/fiber mount fixed at a 3$\degree$ lab angle, with aperture $d_1 = 6$ mm and at a distance $d_2 = 625$ mm from the crystal (which corresponds to an angular spread of $\Delta \theta_s = \frac{d_1}{d_2}$ over which the photon flux is integrated in both radial and azimuthal directions). The bandpass filter in front of it can be modelled as a Gaussian attenuation function, with center wavelength 810 nm and FWHM 10 nm, which scales the photon flux according to its wavelength. The effect of refraction of the pump beam for non-normal incidence also has to be considered. The result of numerical integration over this domain as a function of the crystal tilt angle $\alpha$ is shown in Figure \ref{fig:detector_scan}. The following parameters were used in this calculation:
 
 \begin{itemize}
     \item Pump wavelength: LAM\_P = 405 nm
@@ -663,7 +663,7 @@ A quantitative assessment of the effect of crystal tilt on the expected detector
     \item Detector lab angle: THETA\_S = 3$\degree$
     \item Crystal - detector distance: DIST\_DET = 625 mm
     \item Detector opening diameter: APERTURE = 6 mm
-    \item Gaussian bandpass FWHM: FILTER\_FHWM = 10 nm
+    \item Gaussian bandpass FWHM: FILTER\_FWHM = 10 nm
     \item Filter center wavelength: FILTER\_CENTER = 810 nm
     \item Idler transparency cutoff in crystal: LAM\_I\_MAX = 3500 nm \cite{spdc-intensity}
     \item Ideal crystal cut angle for 3$\degree$: THETA\_M = 29.24$\degree$ (computed)
@@ -713,7 +713,7 @@ Table \ref{tab:counts_computation} shows that the measured coincidence rate is 3
 
 One possible cause for this difference is a limitation of the theoretical model, which assumes that all photons reaching the aperture of the fiber couplers get transported onto the fiber (with 80\% efficiency). This does not take into account the collection modes and angular acceptances of the collimators. One consequence of this is the fact that a focused pump beam results in lower coincidences in the simulation, which contradicts the empirical data (this is the reason why the simulation uses a collimated pump beam). Modifying the computation to properly consider these effects is possible, but beyond the scope of this project.
 
-Another possible reason for the discrepency is inaccuracy of the parameters used for the simulation. They are all nominal values taken from the component datasheets, and have not been actually measured. The pump laser power is especially likely to be different than the nominal value, as the laser is driven with constant current, without using the integrated photodiode for power regulation.
+Another possible reason for the discrepancy is inaccuracy of the parameters used for the simulation. They are all nominal values taken from the component datasheets, and have not been actually measured. The pump laser power is especially likely to be different than the nominal value, as the laser is driven with constant current, without using the integrated photodiode for power regulation.
 
 Finally, imperfect alignment could also explain the lower coincidence rates. However, due to the measured counts being only 35\% lower than the theoretical maximum, it is unlikely that improving alignment could result in significantly better rates.
 
