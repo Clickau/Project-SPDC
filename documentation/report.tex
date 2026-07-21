@@ -101,9 +101,6 @@ The ordinary and principal extraordinary refractive indices are described as fun
 \end{equation}
 
 
-Wave plates are optical components made out of a birefringent crystal like quartz that manipulate the polarization of light in certain ways. Half-wave plates rotate the polarization of incoming light by double the angle between their optical axis and the polarization direction of the incoming light. For example, if vertically polarized light hits a half-wave plate whose optical axis makes an angle of 22.5$\degree$ to the vertical direction, the output beam will be polarized to 45$\degree$.
-
-
 \subsection{Spontaneous phase-matching in BBO crystals}
 
 Type-I spontaneous parametric down-conversion is the process whereby a pump photon of frequency $\omega_p$ enters the BBO crystal as an extraordinary ray at an angle $\theta_m$ (called the phase-matching angle) with respect to the optical axis and gets converted into a pair of signal-idler photons with frequencies $\omega_s$, $\omega_i$ that exit the crystal as ordinary rays. Therefore, the polarization of the signal and idler rays is perpendicular to that of the pump. Figure \ref{fig:spdc_feynman} depicts the corresponding Feynman diagram. Using $E=\hbar \omega$ and $\mathbf{p} = \hbar \mathbf{k}$, the energy and momentum conservation can be expressed as:
@@ -126,7 +123,7 @@ where $\mathbf{k}$ are the respective wave vectors, with the dispersion relation
 \label{fig:spdc_feynman}
 \end{figure}
 
-Let $\theta_s'$ and $\theta_i'$ be the angles formed by the pump ray with the signal and idler rays, respectively (inside the crystal). In the case of degenerate down-conversion, $\omega_s = \omega_i = \frac{\omega_p}{2}$. The momentum conservation in the transverse direction gives $\frac{n_o \omega_s}{c} \cdot \sin (\theta_s') = \frac{n_o \omega_i}{c} \cdot \sin (\theta_i')$, which means $\theta_s' = \theta_i'$. With $\lambda_s = 2 \lambda_p$, longitudinal momentum conservation becomes:
+Let $\theta_s'$ and $\theta_i'$ be the angles formed by the pump ray with the signal and idler rays, respectively (inside the crystal). In the case of degenerate down-conversion (the mode with the highest down-conversion rate), $\omega_s = \omega_i = \frac{\omega_p}{2}$. The momentum conservation in the transverse direction gives $\frac{n_o \omega_s}{c} \cdot \sin (\theta_s') = \frac{n_o \omega_i}{c} \cdot \sin (\theta_i')$, which means $\theta_s' = \theta_i'$. With $\lambda_s = 2 \lambda_p$, longitudinal momentum conservation becomes:
 
 \begin{equation}
     n_e(\lambda_p, \theta_m) = n_o(2\lambda_p) \cdot \cos (\theta_s')
@@ -141,7 +138,7 @@ Figure \ref{fig:spdc_cone} shows the typical configuration for type I phase matc
     \label{refraction_signal}
 \end{equation}
 
-Due to rotational symmetry about the pump beam direction, the photons emerge from the crystal on a cone with half-opening angle $\theta_s$, where photons from the same pair are situated diametrically opposite from each other.
+Due to rotational symmetry about the pump beam direction (azimuthal symmetry), the photons emerge from the crystal on a cone with half-opening angle $\theta_s$, where photons from the same pair are situated diametrically opposite from each other.
 
 
 \begin{figure}[htbp]
@@ -166,7 +163,7 @@ A method for computing the intensity of spontaneous parametric down-conversion, 
 \end{equation}
 
 \begin{equation}
-    \kappa = \kappa_s + \kappa_i
+    \boldsymbol{\kappa} = \boldsymbol{\kappa_s} + \boldsymbol{\kappa_i}
     \label{mismatch_vector_transverse}
 \end{equation}
 
@@ -179,7 +176,7 @@ The rate of down-converted photons of vacuum wavelength $\lambda_s$ emitted unde
     \label{spdc_intensity}
 \end{equation}
 
-where $d_{eff}$ is the effective second-order nonlinear coefficient of the crystal, L the crystal length, $N_p = \frac{P_p}{\hbar \omega_p}$ the pump flux, $n_s, n_i, n_p$ the respective refraction indices, and $d \lambda_s, d\theta_s, d\phi$ are the infinitesimal variations in wavelength, signal angle and azimuthal angle over which the photon flux is calculated. Furthermore, $\xi_i = \kappa_i W$ and $\xi_s = \kappa_s W$ are the dimensionless transverse momenta associated with the signal and idler waves, with $W$ being the pump beam radius.
+where $d_{eff}$ is the effective second-order nonlinear coefficient of the crystal, L the crystal length, $N_p = \frac{P_p}{\hbar \omega_p}$ the pump flux (with power $P_p$), $n_s, n_i, n_p$ the respective refraction indices, and $d \lambda_s, d\theta_s, d\phi$ are the infinitesimal variations in wavelength, signal angle and azimuthal angle over which the photon flux is calculated. Furthermore, $\xi_i = \kappa_i W$ and $\xi_s = \kappa_s W$ are the dimensionless transverse momenta associated with the signal and idler waves, with $W$ being the pump beam radius.
 
 This expression will be used in a later section to compute the theoretically expected count rates and compare them to the measured rates. 
 
@@ -261,7 +258,9 @@ For a coincidence time window $\Delta t_w$, an integration time of 1 s, and indi
 \end{equation}
 
 
+\subsection{Wave plates}
 
+Wave plates are optical components made out of a birefringent crystal like quartz that manipulate the polarization of light in certain ways. Half-wave plates rotate the polarization of incoming light by double the angle between their optical axis and the polarization direction of the incoming light. For example, if vertically polarized light hits a half-wave plate whose optical axis makes an angle of 22.5$\degree$ to the vertical direction, the output beam will be polarized to 45$\degree$.
 
 
 
@@ -276,7 +275,7 @@ For a coincidence time window $\Delta t_w$, an integration time of 1 s, and indi
 
 At the beginning of this project, a source of entangled photons based on Type I SPDC had already been built at the Quantum Technology Laboratory of the OTH Regensburg. A schematic drawing of the existing setup is presented in Figure \ref{fig:old_setup}.
 
-The setup was mounted on an optical table and included two different pump lasers that could be used individually, a 10 mW one that was not temperature stabilized and a 20 mW temperature stabilized one (diode Thorlabs L405P20, mount Thorlabs LDM9T), both operating at 405 nm. The pump beam was directed onto a pair of 0.1 mm thick BBO crystals cut with a phase-matching angle of 29.3$\degree\, \pm$ 0.2$\degree$ (Newlight Photonics PABBO5010-405(I)-HA3) and then into a beamtrap. The 810 nm down-converted photons exiting the crystals were reflected by two mirrors (Thorlabs PF10-03-P01, PF20-03-P01), passed through colored glass filters (Thorlabs FGL610) and were picked up by optical fibers (Thorlabs MR17L01) with the help of a lens mounted in the fiber couplers. These were connected to a detector box with built-in avalanche photodiode (APD) detectors and coincidence counter (qutools quED).
+The setup was mounted on an optical table and included two different pump lasers that could be used individually, a 10 mW one that was not temperature stabilized and a 20 mW temperature stabilized one (diode Thorlabs L405P20, mount Thorlabs LDM9T), both operating at 405 nm. The pump beam was directed onto a pair of 0.1 mm thick BBO crystals cut with a phase-matching angle of 29.3$\degree\, \pm$ 0.2$\degree$ (Newlight Photonics PABBO5010-405(I)-HA3) and then into a beamtrap. The 810 nm down-converted photons exiting the crystals were reflected by two mirrors (Thorlabs PF10-03-P01, PF20-03-P01), passed through colored glass filters (Thorlabs FGL610) and were picked up by optical fibers (Thorlabs MR17L01) with the help of a lens mounted in each fiber coupler. These were connected to a detector box with built-in avalanche photodiode (APD) detectors and coincidence counter (qutools quED).
 
 
 \begin{figure}[htbp]
@@ -288,7 +287,7 @@ The setup was mounted on an optical table and included two different pump lasers
 The crystal pair was mounted with its axes at 45$\degree$ with respect to the horizontal, which allowed the vertically polarized pump beam from the laser to induce SPDC in both crystals without the need for a waveplate.
 
 
-The alignment of the setup was performed by using a separated red alignment laser, which could be temporarily mounted onto the same beam path using a fiber coupler. The crystal could then be replaced by an axicon (Thorlabs AX1265), which is a special optical component that turns a beam of light that hits it in the center under normal incidence into a cone of light, with a half opening angle of 3$\degree$. This perfectly matches the cone that is generated by SPDC and can be used to visually position the detectors and filters.
+The alignment of the setup was performed by using a separate red alignment laser, which could be temporarily mounted onto the same beam path using a fiber coupler. The crystal could then be replaced by an axicon (Thorlabs AX1265), which is a special optical component that turns a beam of light that hits it in the center under normal incidence into a cone of light, with a half opening angle of 3$\degree$. This perfectly matches the cone that is generated by SPDC and can be used to visually position the detectors and filters.
 
 The mirrors, fiber mounts, crystal and axicon are all mounted using kinematic mounts that allow precise rotation about the vertical and horizontal axes. Components marked as "removable" are attached using magnetic mounts, which allow them to be taken out and placed back in the exact same orientation. When in use, the entire setup is covered with a dark cloth to prevent stray light from influencing the measurements. Under these conditions, the dark counts of the detectors are about 400 and 800 per second, respectively.
 
@@ -312,7 +311,7 @@ Noticing the low proportion of coincidence counts to single counts, a first idea
 
 A simple solution is replacing the colored glass filters with 810 nm bandpass filters, with a full width at half maximum (FWHM) of 10 nm (Thorlabs FBH810-10), which were already available in the lab. Measuring again shows a vastly different picture: 1400/800 single counts with 0 coincidences (with the crystals mounted). Taking into account the detector dark counts, this indicates that the bandpass filters are much better at removing the unwanted stray radiation. It also shows that the setup currently produces no actual down-converted photons.
 
-An important observation is that the bandpass filters have been used previously, but the measurements with them have always resulted in less than 5 coincidences per second, even after multiple attempts at alignment. This suggests that there is a deeper underlying problem that makes proper alignment impossible with the current setup.
+An important observation is that the bandpass filters had been used previously, but the measurements taken with them had always resulted in less than 5 coincidences per second, even after multiple attempts at alignment. This suggests that there is a deeper underlying problem that makes proper alignment impossible with the current setup.
 
 
 \subsubsection{Pump laser wavelength deviations}
@@ -355,7 +354,7 @@ Indeed, comparing this to the alignment procedure detailed in the Thorlabs instr
 
 Figure \ref{fig:new_setup} shows a schematic drawing of the proposed new setup. The main feature of this design consists of two alignment irises that can be used to precisely position and orient the laser beams. The first one is a Thorlabs ID15 that can be opened and closed, while the second one is improvised out of black cardboard with a small hole in the middle. These two irises define a unique beam path through space, assuming mirror 3 stays fixed. Furthermore, the crystal has been moved after mirror 2, as this allows both mirrors 1 and 2 to be used for beamwalking the pump laser. These two mirrors provide four degrees of freedom (DOF) through their kinematic mounts, allowing for both translation and rotation of the pump beam (also 4 DOF) and thus making it possible to guide it through both alignment irises using only the screws of the mirror mounts. Mirror 4 has been added to allow the same beamwalking procedure for the red laser beam (2 DOF from the mirror, 2 DOF from the fiber coupler itself). The two laser beams can thus be made to follow the exact same optical path.
 
-Another iris (Thorlabs ID15) has been added in front of the pump laser to clean up the stray radiation emitted around the collimated beam and a half-wave plate (Thorlabs WPH10M-405) has been added to enable rotating the pump polarization. Mirrors 1 and 2 have also been upgraded to PF10-03-F01, which is better at reflecting 405 nm light. A place and a mirror have also been reserved for a 100 mW laser that can be added in the future to further improve the count rates.
+Another iris (Thorlabs ID15) has been added in front of the pump laser to clean up the stray radiation emitted around the collimated beam and a half-wave plate (Thorlabs WPH10M-405) enables rotation of the pump polarization. Mirrors 1 and 2 have also been upgraded to PF10-03-F01, which is better at reflecting 405 nm light. A place and a mirror have also been reserved for a 100 mW laser that can be added in the future to further improve the count rates.
 
 A parts list was created and an order for the necessary components was placed.
 
@@ -371,7 +370,7 @@ A parts list was created and an order for the necessary components was placed.
 
 The new setup has been built by loosely following the instructions given in \cite{thorlabs_manual}, with some adaptations. A separate manual with step-by-step instructions has been written to assist with any adjustments that might be needed in the future.
 
-The first step was to place the 20 mW laser and orient its beam approximately perpendicular to the wall. The beam cleaning iris was placed in front of it and aligned such that the center of the beam could pass through it (Figure \ref{fig:beam_cleaning_iris}). The mirrors 1, 2 and 3 were then placed in this order, each time making sure that the beam was always at the same height and approximately parallel to the grid lines. Afterwards, the two alignment irises were placed right onto the beam path and fixed in their final positions. Small adjustments to the beam path were made with the kinematic mirror mounts to make sure the beam and the iris openings were perfectly concentric.
+The first step was to place the 20 mW laser and orient its beam approximately perpendicular to the wall. The beam cleaning iris was placed in front of it and aligned such that the center of the beam could pass through it (Figure \ref{fig:beam_cleaning_iris}). The mirrors 1, 2 and 3 were then placed in this order, each time making sure that the beam was always at the same height and approximately parallel to the grid lines. Afterwards, the two alignment irises were placed right onto the beam path and fixed in their final positions. Small adjustments to the beam path were made with the kinematic mirror mounts to ensure the beam and the iris openings were perfectly concentric.
 
 
 \begin{figure}[htbp]
@@ -381,7 +380,7 @@ The first step was to place the 20 mW laser and orient its beam approximately pe
 \end{figure}
 
 
-Afterwards, the red alignment laser and mirror 4 were mounted in their approximate places and a beamwalk was performed to orient the laser beam through the same two alignment irises. First, the alignment iris 1 was closed almost completely and only the adjustment screws of the fiber coupler mount were used to orient the beam through the opening. Then the first iris was opened and only the adjustment screws of mirror 4 were used to orient the beam through the opening of the second alignment iris. The procedure was repeated, alternating the irises, until the alignment converged and the beam was precisely tuned to the same path as the pump laser beam (Figure \ref{fig:both_beams_aligned})
+Afterwards, the red alignment laser and mirror 4 were mounted in their approximate positions and a beamwalk was performed to orient the laser beam through the same two alignment irises. First, the alignment iris 1 was closed almost completely and only the adjustment screws of the fiber coupler mount were used to orient the beam through the opening. Then the first iris was opened and only the adjustment screws of mirror 4 were used to orient the beam through the opening of the second alignment iris. The procedure was repeated, alternating the irises, until the alignment converged and the beam was precisely tuned to the same path as the pump laser beam (Figure \ref{fig:both_beams_aligned}).
 
 \begin{figure}[htbp]
     \centering
@@ -394,7 +393,7 @@ Afterwards, the red alignment laser and mirror 4 were mounted in their approxima
 
 
 
-At this point, the axicon could be put into place and positioned in such a way that the following conditions were simultaneously met: the generated circle was uniform (Figure \ref{fig:axicon_circle}) and the back reflection from the axicon passes back through the hole in the iris. This step required some patience, but at the end the laser beam was hitting the axicon right in the center, under normal incidence.
+At this point, the axicon could be put into place and positioned in such a way that the following conditions were simultaneously met: the generated circle was uniform (Figure \ref{fig:axicon_circle}) and the back reflection from the axicon passed back through the hole in the iris. This step required some patience, but at the end the laser beam was hitting the axicon right in the center, under normal incidence.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.07]{figures/axicon_circle.jpg}}
@@ -427,9 +426,9 @@ The orientation of the fiber couplers is very important and was adjusted in two 
 \end{figure}
 
 
-A finer adjustment was performed by removing the axicon from its magnetic mount and replacing it with a colored glass filter. Shining the pump laser onto the filter made it fluoresce, which means that photons were emitted from the exact same place where the crystal will be. This allowed for precise orientation of the fiber couplers by maximizing the single count rates measured by the detectors.
+A finer adjustment was performed by removing the axicon from its magnetic mount and replacing it with a colored glass filter. Shining the pump laser onto the filter made it fluoresce, which meant that photons were emitted from the exact same place where the crystal would be placed. This allowed for precise orientation of the fiber couplers by maximizing the single count rates measured by the detectors. The lenses of the fiber couplers could also be focused this way.
 
-The half-wave plate could now also be placed into a rotation mount and inserted, ensuring the pump beam passed through the center under normal incidence. The angle was initially set to 0$\degree$.
+The half-wave plate could then be placed into a rotation mount and inserted, ensuring the pump beam passed through the center under normal incidence. The angle was initially set to 0$\degree$.
 
 Finally, the crystal pair could be placed in its final position, making sure that its axes were horizontal and vertical, respectively, and that the beam was hitting it under normal incidence. Afterwards, the crystal was tilted about its horizontal axis, until the coincidence count rate was maximized. Since the laser is vertically polarized, this only affected the crystal with the optical axis positioned vertically. To adjust the other crystal, the half-wave plate was set to 45$\degree$ (making the pump beam horizontally polarized) and the crystal was tilted about its vertical axis to maximize coincidences. Interestingly, the coincidence counts were very insensitive to the crystal angle, staying almost constant with tilts of up to a few degrees. This is a consequence of the crystals being very thin and will be explained in more detail later in the report.
 
@@ -677,7 +676,7 @@ A quantitative assessment of the effect of crystal tilt on the expected detector
 
 
 
-This result very well matches the empirical observation that tilting the crystal by up to around 1$\degree$ has almost no effect on the counts. The explanation for this is found in the term $\operatorname{sinc}^2 \left(\frac{1}{2}\, L\, \Delta k_z \right)$ of equation \eqref{spdc_intensity}, which has its first zero at $\Delta k_z = \frac{2\pi}{L}$, meaning the breadth of the phase-matching peak is inversely proportional to the crystal thickness. The thin 0.1 mm crystal is thus very forgiving to alignment tolerance and pump wavelength deviations.
+This result very well matches the empirical observation that tilting the crystal by up to around 1$\degree$ has almost no effect on the counts. The explanation for this is found in the term $\operatorname{sinc}^2 \left(\frac{1}{2}\, L\, \Delta k_z \right)$ of equation \eqref{spdc_intensity}, which has its first zero at $\Delta k_z = \frac{2\pi}{L}$, meaning the width of the phase-matching peak is inversely proportional to the crystal thickness. The thin 0.1 mm crystal is thus very forgiving to alignment tolerance and pump wavelength deviations.
 
 
 \begin{figure}[htbp]
@@ -725,11 +724,11 @@ Finally, imperfect alignment could also explain the lower coincidence rates. How
 
 This project was a success in vastly improving the down-conversion rates of the source, while also proving the presence of the maximally entangled Bell state, which defies all local realistic theories. The source in its current state can already be used to perform educational physics experiments with entangled photons.
 
-A top priority should be the procurement and installation of a quarter-wave plate between the half-wave plate and the crystal, which would allow for precise control over the phase $\varphi$, as described in section \ref{ssec:phase_compensation}. With this modification, a CHSH violation could be measured without sacrificing half the count rate.
+A top priority should be the procurement and installation of a quarter-wave plate between the half-wave plate and the crystal, which would allow for precise control over the phase $\varphi$, as described in section \ref{ssec:phase_compensation}. With this modification, a CHSH violation could be measured without sacrificing half of the count rate.
 
-It has also been observed that the rates can vary by up to 10\% from one day to the next, without any change in the setup. This could point to temperature variations affecting the setup mechanically or the laser diode power and warrants further investigation. Measuring the actual laser power and setting it to operate in constant-power mode might mitigate this effect.
+It has also been observed that the rates can vary by up to 10\% from one day to the next, without any change in the setup. This could point to temperature variations affecting the setup mechanically or the laser diode power and warrants further investigation. Measuring the actual laser power and setting it to operate in constant-power mode might mitigate this effect. Another anomaly to be studied is the low coincidence rate seen in Table \ref{tab:bases_measurements} for angles 135$\degree$/\,135$\degree$.
 
-The most obvious way to improve the coincidence rate further is to use a more powerful pump laser. A spot has been reserved in the setup for mounting a 100 mW laser and its corresponding mirror. Its beam could then easily be aligned to pass through the two alignment irises, by performing a beamwalk as described previously, which should result in a coincidence rate at least 2.5 times higher than the current value, without any additional modifications.
+The most obvious way to improve the coincidence rate further is to use a more powerful pump laser. A spot has been reserved in the setup for mounting a 100 mW laser and its corresponding mirror. Its beam could then easily be aligned to pass through the two alignment irises by performing a beamwalk as described previously, which should result in a coincidence rate at least 2.5 times higher than the current value, without any additional modifications.
 
 Replacing the crystal pair with a thicker one would have the highest impact on the down-conversion rate, which is proportional to the square of the crystal thickness, as seen in equation \eqref{spdc_intensity}. However, this would introduce additional problems that need to be corrected with spatial compensation crystals, as described in \cite{thorlabs_manual}.
 
